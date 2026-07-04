@@ -269,7 +269,6 @@ export const deleteUser = catchAsync(async (req, res, next) => {
     return next(new AppError('Cannot delete a main admin.', 403));
   }
 
-  // Toggle delete status (soft delete)
   user.isDeleted = !user.isDeleted;
   await user.save();
 
@@ -314,17 +313,14 @@ export const updateUserRole = catchAsync(async (req, res, next) => {
     return next(new AppError('User not found.', 404));
   }
 
-  // Prevent modifying main admin
   if (targetUser.role === 'admin' && req.user._id.toString() !== targetUser._id.toString()) {
     return next(new AppError('Cannot modify main admin role.', 403));
   }
 
-  // Only main admin can make sub admin
   if (role === 'sub_admin' && req.user.role !== 'admin') {
     return next(new AppError('Only main admin can create sub admins.', 403));
   }
 
-  // Only main admin can remove sub admin
   if (targetUser.role === 'sub_admin' && req.user.role !== 'admin') {
     return next(new AppError('Only main admin can remove sub admins.', 403));
   }
@@ -409,6 +405,8 @@ export const getApplicationsAdmin = catchAsync(async (req, res, next) => {
   });
 });
 
+// ==================== UPDATE APPLICATION STATUS ====================
+
 export const updateApplicationStatus = catchAsync(async (req, res, next) => {
   const { status, adminNotes, rejectionReason } = req.body;
   const applicationId = req.params.id;
@@ -428,34 +426,63 @@ export const updateApplicationStatus = catchAsync(async (req, res, next) => {
     return next(new AppError('Application not found.', 404));
   }
 
+  // ✅ Update status
   application.status = status;
   application.adminNotes = adminNotes || application.adminNotes;
-  application.rejectionReason = status === 'Rejected' ? rejectionReason : '';
+  application.rejectionReason = status === 'Rejected' ? (rejectionReason || 'No reason provided') : '';
   application.reviewedBy = req.user._id;
   application.reviewedAt = new Date();
 
   await application.save();
 
-  await sendStatusUpdateEmail(
-    application.userId.email,
-    `${application.userId.firstName} ${application.userId.lastName}`,
-    application.jobTitle,
-    status
-  );
+  // ✅ Send email notification
+  try {
+    await sendStatusUpdateEmail(
+      application.userId.email,
+      `${application.userId.firstName} ${application.userId.lastName}`,
+      application.jobTitle,
+      status
+    );
+  } catch (error) {
+    console.log('⚠️ Email notification failed:', error.message);
+  }
 
+  // ✅ Create in-app notification for user
   await Notification.create({
     userId: application.userId._id,
     title: `Application ${status}`,
-    message: `Your application for ${application.jobTitle} has been ${status.toLowerCase()}.`,
+    message: `Your application for "${application.jobTitle}" has been ${status.toLowerCase()}.`,
     type: 'status',
     link: '/dashboard',
-    metadata: { applicationId: application._id, status },
+    metadata: { 
+      applicationId: application._id, 
+      status: status,
+      jobTitle: application.jobTitle,
+    },
+  });
+
+  // ✅ Also create notification for admin (confirmation)
+  await Notification.create({
+    userId: req.user._id,
+    title: `Application ${status} - ${application.userId.firstName} ${application.userId.lastName}`,
+    message: `You ${status.toLowerCase()} ${application.userId.firstName} ${application.userId.lastName}'s application for "${application.jobTitle}"`,
+    type: 'status',
+    link: `/admin/applications/${application._id}`,
+    metadata: { 
+      applicationId: application._id, 
+      status: status,
+    },
   });
 
   res.status(200).json({
     success: true,
     message: `Application ${status.toLowerCase()} successfully.`,
-    application,
+    application: {
+      id: application._id,
+      status: application.status,
+      jobTitle: application.jobTitle,
+      applicantName: `${application.userId.firstName} ${application.userId.lastName}`,
+    },
   });
 });
 
@@ -625,7 +652,6 @@ export const deleteContact = catchAsync(async (req, res, next) => {
   });
 });
 
-
 // ==================== GLOBAL SEARCH ====================
 
 export const globalSearch = catchAsync(async (req, res, next) => {
@@ -685,4 +711,3 @@ export const globalSearch = catchAsync(async (req, res, next) => {
     },
   });
 });
-
