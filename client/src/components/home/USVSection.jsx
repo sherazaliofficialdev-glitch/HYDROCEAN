@@ -25,7 +25,7 @@ const USVSection = () => {
             className="relative overflow-hidden h-full min-h-[500px] order-1"
           >
             <img
-              src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=1200"
+              src="/images/image.png"
               alt="Unmanned Surface Vehicle"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />

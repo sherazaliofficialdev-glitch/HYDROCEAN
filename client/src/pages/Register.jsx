@@ -41,8 +41,13 @@ const Register = () => {
     setLoading(true);
     try {
       const response = await register(formData);
-      showSuccess('Registration successful! Please verify your OTP.');
-      navigate('/verify-otp', { state: { email: formData.email } });
+      
+      // ✅ Direct login after registration
+      if (response.token && response.user) {
+        localStorage.setItem('token', response.token);
+        showSuccess(response.message || 'Registration successful!');
+        navigate('/dashboard');
+      }
     } catch (error) {
       showError(error.response?.data?.message || 'Registration failed. Please try again.');
     } finally {

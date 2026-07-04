@@ -101,7 +101,7 @@ const TrustSection = () => {
             className="relative overflow-hidden h-full min-h-[500px] order-2 lg:order-2"
           >
             <img
-              src="https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&q=80&w=1200"
+              src="/images/images (15).jpg"
               alt="Company Registration Certificate"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />

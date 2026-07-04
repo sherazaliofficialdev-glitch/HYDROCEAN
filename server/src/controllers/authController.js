@@ -1,686 +1,334 @@
-import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import Job from '../models/Job.js';
-import Application from '../models/Application.js';
-import Contact from '../models/Contact.js';
-import Visitor from '../models/Visitor.js';
-import Notification from '../models/Notification.js';
+import OTP from '../models/OTP.js';
 import { AppError } from '../utils/AppError.js';
 import { catchAsync } from '../utils/catchAsync.js';
-import { sendStatusUpdateEmail, sendContactReplyEmail } from '../services/emailService.js';
+import { generateOTP, sendOTP, saveOTP, verifyOTP } from '../services/otpService.js';
+import { sendWelcomeEmail } from '../services/emailService.js';
 
-// ==================== DASHBOARD STATS ====================
+const signToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE || '7d',
+  });
+};
 
-export const getDashboardStats = catchAsync(async (req, res, next) => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  const weekAgo = new Date(today);
-  weekAgo.setDate(weekAgo.getDate() - 7);
-  
-  const monthAgo = new Date(today);
-  monthAgo.setDate(monthAgo.getDate() - 30);
+// ============================================
+// ✅ REGISTER - Direct Save (No OTP)
+// ============================================
 
-  const [
-    totalUsers,
-    usersToday,
-    totalJobs,
-    activeJobs,
-    totalApplications,
-    pendingApplications,
-    approvedApplications,
-    rejectedApplications,
-    totalContacts,
-    unreadContacts,
-    visitorsToday,
-    visitorsThisWeek,
-    visitorsThisMonth,
-    totalVisitors,
-  ] = await Promise.all([
-    User.countDocuments({ isDeleted: false }),
-    User.countDocuments({ createdAt: { $gte: today }, isDeleted: false }),
-    Job.countDocuments(),
-    Job.countDocuments({ isOpen: true, isHidden: false }),
-    Application.countDocuments(),
-    Application.countDocuments({ status: 'Pending' }),
-    Application.countDocuments({ status: 'Approved' }),
-    Application.countDocuments({ status: 'Rejected' }),
-    Contact.countDocuments(),
-    Contact.countDocuments({ status: 'Unread' }),
-    Visitor.countDocuments({ createdAt: { $gte: today } }),
-    Visitor.countDocuments({ createdAt: { $gte: weekAgo } }),
-    Visitor.countDocuments({ createdAt: { $gte: monthAgo } }),
-    Visitor.countDocuments(),
-  ]);
+export const register = catchAsync(async (req, res, next) => {
+  const { firstName, lastName, email, password, confirmPassword } = req.body;
 
-  const statusBreakdown = await Application.aggregate([
-    { $group: { _id: '$status', count: { $sum: 1 } } },
-  ]);
+  // ✅ Validation
+  if (!firstName || !lastName || !email || !password || !confirmPassword) {
+    return next(new AppError('All fields are required.', 400));
+  }
 
-  const breakdown = {};
-  statusBreakdown.forEach((item) => {
-    breakdown[item._id] = item.count;
+  if (password !== confirmPassword) {
+    return next(new AppError('Passwords do not match.', 400));
+  }
+
+  if (password.length < 6) {
+    return next(new AppError('Password must be at least 6 characters.', 400));
+  }
+
+  // ✅ Check if user already exists
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return next(new AppError('User already exists with this email. Please login.', 400));
+  }
+
+  // ✅ Check if this email is a main admin email
+  const isMainAdmin = process.env.MAIN_ADMIN_EMAIL_1 === email || 
+                      process.env.MAIN_ADMIN_EMAIL_2 === email;
+
+  // ✅ Create user directly (verified = true)
+  const user = await User.create({
+    firstName,
+    lastName,
+    email,
+    password,
+    role: isMainAdmin ? 'admin' : 'user',
+    isVerified: true,
   });
 
-  const recentActivities = await Notification.find()
-    .sort({ createdAt: -1 })
-    .limit(10)
-    .populate('userId', 'firstName lastName');
+  // ✅ Send welcome email (optional - don't wait for it)
+  try {
+    await sendWelcomeEmail(email, `${firstName} ${lastName}`);
+  } catch (error) {
+    console.log('⚠️ Welcome email failed but user registered:', error.message);
+  }
 
-  res.status(200).json({
+  // ✅ Generate JWT token
+  const token = signToken(user._id);
+
+  res.status(201).json({
     success: true,
-    stats: {
-      totalUsers,
-      usersToday,
-      totalJobs,
-      activeJobs,
-      totalApplications,
-      pendingApplications,
-      approvedApplications,
-      rejectedApplications,
-      totalContacts,
-      unreadContacts,
-      visitorsToday,
-      visitorsThisWeek,
-      visitorsThisMonth,
-      totalVisitors,
-      statusBreakdown: breakdown,
-      recentActivities: recentActivities.map(a => ({
-        id: a._id,
-        action: a.title,
-        description: a.message,
-        timestamp: a.createdAt,
-        user: a.userId ? `${a.userId.firstName} ${a.userId.lastName}` : 'System',
-      })),
-    },
-  });
-});
-
-// ==================== USER MANAGEMENT ====================
-
-export const getUsers = catchAsync(async (req, res, next) => {
-  const { page = 1, limit = 10, search, role, status } = req.query;
-  
-  const query = {};
-  
-  if (search) {
-    query.$or = [
-      { firstName: { $regex: search, $options: 'i' } },
-      { lastName: { $regex: search, $options: 'i' } },
-      { email: { $regex: search, $options: 'i' } },
-    ];
-  }
-  
-  if (role) {
-    query.role = role;
-  }
-  
-  if (status === 'blocked') {
-    query.isBlocked = true;
-  } else if (status === 'active') {
-    query.isBlocked = false;
-    query.isDeleted = false;
-  } else if (status === 'deleted') {
-    query.isDeleted = true;
-  }
-
-  const users = await User.find(query)
-    .select('-password')
-    .sort({ createdAt: -1 })
-    .limit(limit * 1)
-    .skip((page - 1) * limit);
-
-  const total = await User.countDocuments(query);
-
-  res.status(200).json({
-    success: true,
-    users,
-    totalPages: Math.ceil(total / limit),
-    currentPage: Number(page),
-    total,
-  });
-});
-
-export const getUserById = catchAsync(async (req, res, next) => {
-  const userId = req.params.id;
-  
-  if (!userId) {
-    return next(new AppError('User ID is required.', 400));
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return next(new AppError('Invalid user ID format.', 400));
-  }
-
-  const user = await User.findById(userId).select('-password');
-  
-  if (!user) {
-    return next(new AppError('User not found.', 404));
-  }
-
-  res.status(200).json({
-    success: true,
-    user,
-  });
-});
-
-export const updateUser = catchAsync(async (req, res, next) => {
-  const userId = req.params.id;
-  const { firstName, lastName, email, phone } = req.body;
-  
-  if (!userId) {
-    return next(new AppError('User ID is required.', 400));
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return next(new AppError('Invalid user ID format.', 400));
-  }
-
-  const user = await User.findById(userId);
-  if (!user) {
-    return next(new AppError('User not found.', 404));
-  }
-
-  user.firstName = firstName || user.firstName;
-  user.lastName = lastName || user.lastName;
-  user.email = email || user.email;
-  user.phone = phone || user.phone;
-
-  await user.save();
-
-  res.status(200).json({
-    success: true,
+    token,
     user: {
       id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      phone: user.phone,
+      role: user.role,
+      isVerified: user.isVerified,
     },
+    message: 'Registration successful!',
   });
 });
 
-// ==================== BLOCK/UNBLOCK USER ====================
+// ============================================
+// ✅ LOGIN
+// ============================================
 
-export const blockUser = catchAsync(async (req, res, next) => {
-  const userId = req.params.id;
-  
-  if (!userId) {
-    return next(new AppError('User ID is required.', 400));
+export const login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(new AppError('Email and password are required.', 400));
   }
 
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return next(new AppError('Invalid user ID format.', 400));
-  }
-
-  const user = await User.findById(userId);
+  const user = await User.findOne({ email });
   if (!user) {
-    return next(new AppError('User not found.', 404));
+    return next(new AppError('Invalid email or password.', 401));
   }
 
-  if (user.role === 'admin') {
-    return next(new AppError('Cannot block a main admin.', 403));
+  // ✅ Check if user is deleted
+  if (user.isDeleted) {
+    return res.status(401).json({
+      success: false,
+      message: 'Your account has been deleted. Please contact support to restore your account.',
+      isDeleted: true,
+    });
   }
 
-  user.isBlocked = !user.isBlocked;
+  // ✅ Check if user is verified
+  if (!user.isVerified) {
+    // Send OTP for verification
+    const otp = generateOTP();
+    await saveOTP(email, otp, 'registration');
+    await sendOTP(email, otp, 'registration');
+    
+    return res.status(401).json({
+      success: false,
+      needsVerification: true,
+      email,
+      message: 'Account not verified. A new OTP has been sent to your email.',
+    });
+  }
+
+  // ✅ Check if user is blocked
+  if (user.isBlocked) {
+    return next(new AppError('Your account has been blocked. Please contact support.', 403));
+  }
+
+  // ✅ Verify password
+  const isPasswordValid = await user.comparePassword(password);
+  if (!isPasswordValid) {
+    return next(new AppError('Invalid email or password.', 401));
+  }
+
+  user.lastLogin = new Date();
   await user.save();
 
-  await Notification.create({
-    userId: user._id,
-    title: user.isBlocked ? 'Account Blocked' : 'Account Unblocked',
-    message: user.isBlocked 
-      ? 'Your account has been blocked. Please contact support for assistance.'
-      : 'Your account has been unblocked. You can now login.',
-    type: 'system',
-  });
+  const token = signToken(user._id);
 
   res.status(200).json({
     success: true,
-    message: `User ${user.isBlocked ? 'blocked' : 'unblocked'} successfully.`,
+    token,
     user: {
       id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
       isBlocked: user.isBlocked,
-    },
-  });
-});
-
-// ==================== DELETE/RESTORE USER ====================
-
-export const deleteUser = catchAsync(async (req, res, next) => {
-  const userId = req.params.id;
-  
-  if (!userId) {
-    return next(new AppError('User ID is required.', 400));
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return next(new AppError('Invalid user ID format.', 400));
-  }
-
-  const user = await User.findById(userId);
-  if (!user) {
-    return next(new AppError('User not found.', 404));
-  }
-
-  if (user.role === 'admin') {
-    return next(new AppError('Cannot delete a main admin.', 403));
-  }
-
-  // Toggle delete status (soft delete)
-  user.isDeleted = !user.isDeleted;
-  await user.save();
-
-  await Notification.create({
-    userId: user._id,
-    title: user.isDeleted ? 'Account Deleted' : 'Account Restored',
-    message: user.isDeleted 
-      ? 'Your account has been deleted. Contact support if this was a mistake.'
-      : 'Your account has been restored. You can now login again.',
-    type: 'system',
-  });
-
-  res.status(200).json({
-    success: true,
-    message: `User ${user.isDeleted ? 'deleted' : 'restored'} successfully.`,
-    user: {
-      id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
       isDeleted: user.isDeleted,
     },
   });
 });
 
-// ==================== UPDATE USER ROLE (Sub Admin) ====================
+// ============================================
+// ✅ GET CURRENT USER
+// ============================================
 
-export const updateUserRole = catchAsync(async (req, res, next) => {
-  const userId = req.params.id;
-  const { role, permissions } = req.body;
-  
-  if (!userId) {
-    return next(new AppError('User ID is required.', 400));
+export const getMe = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    success: true,
+    user: {
+      id: req.user._id,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      email: req.user.email,
+      role: req.user.role,
+      isVerified: req.user.isVerified,
+      isBlocked: req.user.isBlocked,
+      isDeleted: req.user.isDeleted,
+      profilePicture: req.user.profilePicture,
+      permissions: req.user.permissions || [],
+      phone: req.user.phone || '',
+    },
+  });
+});
+
+// ============================================
+// ✅ FORGOT PASSWORD
+// ============================================
+
+export const forgotPassword = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return next(new AppError('Email is required.', 400));
   }
 
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return next(new AppError('Invalid user ID format.', 400));
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(new AppError('No user found with this email.', 404));
   }
 
-  const targetUser = await User.findById(userId);
-  if (!targetUser) {
+  const otp = generateOTP();
+  await saveOTP(email, otp, 'forgot_password');
+  await sendOTP(email, otp, 'forgot_password');
+
+  res.status(200).json({
+    success: true,
+    message: 'OTP sent to your email for password reset.',
+  });
+});
+
+// ============================================
+// ✅ RESET PASSWORD
+// ============================================
+
+export const resetPassword = catchAsync(async (req, res, next) => {
+  const { email, otp, newPassword, confirmPassword } = req.body;
+
+  if (!email || !otp || !newPassword || !confirmPassword) {
+    return next(new AppError('All fields are required.', 400));
+  }
+
+  if (newPassword !== confirmPassword) {
+    return next(new AppError('Passwords do not match.', 400));
+  }
+
+  if (newPassword.length < 6) {
+    return next(new AppError('Password must be at least 6 characters.', 400));
+  }
+
+  await verifyOTP(email, otp, 'forgot_password');
+
+  const user = await User.findOne({ email });
+  if (!user) {
     return next(new AppError('User not found.', 404));
   }
 
-  // Prevent modifying main admin
-  if (targetUser.role === 'admin' && req.user._id.toString() !== targetUser._id.toString()) {
-    return next(new AppError('Cannot modify main admin role.', 403));
-  }
-
-  // Only main admin can make sub admin
-  if (role === 'sub_admin' && req.user.role !== 'admin') {
-    return next(new AppError('Only main admin can create sub admins.', 403));
-  }
-
-  // Only main admin can remove sub admin
-  if (targetUser.role === 'sub_admin' && req.user.role !== 'admin') {
-    return next(new AppError('Only main admin can remove sub admins.', 403));
-  }
-
-  targetUser.role = role || targetUser.role;
-  
-  if (role === 'sub_admin') {
-    targetUser.permissions = permissions || [
-      'View Dashboard',
-      'View Applications',
-      'Manage Jobs',
-      'Send Emails',
-      'Approve Applications',
-      'Reject Applications',
-    ];
-  } else if (role === 'user') {
-    targetUser.permissions = [];
-  }
-
-  await targetUser.save();
-
-  await Notification.create({
-    userId: targetUser._id,
-    title: 'Role Updated',
-    message: `Your role has been updated to ${role}.`,
-    type: 'system',
-  });
+  user.password = newPassword;
+  user.resetPasswordOTP = undefined;
+  user.resetPasswordOTPExpiry = undefined;
+  await user.save();
 
   res.status(200).json({
     success: true,
-    message: `User role updated to ${role} successfully.`,
+    message: 'Password reset successfully. Please login with your new password.',
+  });
+});
+
+// ============================================
+// ✅ CHANGE PASSWORD
+// ============================================
+
+export const changePassword = catchAsync(async (req, res, next) => {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    return next(new AppError('All fields are required.', 400));
+  }
+
+  if (newPassword !== confirmPassword) {
+    return next(new AppError('Passwords do not match.', 400));
+  }
+
+  if (newPassword.length < 6) {
+    return next(new AppError('Password must be at least 6 characters.', 400));
+  }
+
+  const user = await User.findById(req.user._id);
+  const isPasswordValid = await user.comparePassword(currentPassword);
+
+  if (!isPasswordValid) {
+    return next(new AppError('Current password is incorrect.', 401));
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Password changed successfully.',
+  });
+});
+
+// ============================================
+// ✅ VERIFY OTP (For existing users only)
+// ============================================
+
+export const verifyOTPController = catchAsync(async (req, res, next) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return next(new AppError('Email and OTP are required.', 400));
+  }
+
+  await verifyOTP(email, otp, 'registration');
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(new AppError('User not found.', 404));
+  }
+
+  user.isVerified = true;
+  await user.save();
+
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    success: true,
+    token,
     user: {
-      id: targetUser._id,
-      firstName: targetUser.firstName,
-      lastName: targetUser.lastName,
-      email: targetUser.email,
-      role: targetUser.role,
-      permissions: targetUser.permissions,
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
     },
   });
 });
 
-// ==================== APPLICATION MANAGEMENT ====================
+// ============================================
+// ✅ RESEND OTP (For existing users only)
+// ============================================
 
-export const getApplicationsAdmin = catchAsync(async (req, res, next) => {
-  const { page = 1, limit = 10, search, status, jobId } = req.query;
-  
-  const query = {};
-  
-  if (search) {
-    query.$or = [
-      { firstName: { $regex: search, $options: 'i' } },
-      { lastName: { $regex: search, $options: 'i' } },
-      { email: { $regex: search, $options: 'i' } },
-      { trackingId: { $regex: search, $options: 'i' } },
-    ];
-  }
-  
-  if (status) {
-    query.status = status;
-  }
-  
-  if (jobId) {
-    query.jobId = jobId;
+export const resendOTP = catchAsync(async (req, res, next) => {
+  const { email, purpose = 'registration' } = req.body;
+
+  if (!email) {
+    return next(new AppError('Email is required.', 400));
   }
 
-  const applications = await Application.find(query)
-    .populate('userId', 'firstName lastName email')
-    .populate('jobId', 'title')
-    .sort({ createdAt: -1 })
-    .limit(limit * 1)
-    .skip((page - 1) * limit);
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(new AppError('User not found.', 404));
+  }
 
-  const total = await Application.countDocuments(query);
+  const otp = generateOTP();
+  await saveOTP(email, otp, purpose);
+  await sendOTP(email, otp, purpose);
 
   res.status(200).json({
     success: true,
-    applications,
-    totalPages: Math.ceil(total / limit),
-    currentPage: Number(page),
-    total,
-  });
-});
-
-export const updateApplicationStatus = catchAsync(async (req, res, next) => {
-  const { status, adminNotes, rejectionReason } = req.body;
-  const applicationId = req.params.id;
-  
-  if (!applicationId) {
-    return next(new AppError('Application ID is required.', 400));
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(applicationId)) {
-    return next(new AppError('Invalid application ID format.', 400));
-  }
-
-  const application = await Application.findById(applicationId)
-    .populate('userId', 'firstName lastName email');
-  
-  if (!application) {
-    return next(new AppError('Application not found.', 404));
-  }
-
-  application.status = status;
-  application.adminNotes = adminNotes || application.adminNotes;
-  application.rejectionReason = status === 'Rejected' ? rejectionReason : '';
-  application.reviewedBy = req.user._id;
-  application.reviewedAt = new Date();
-
-  await application.save();
-
-  await sendStatusUpdateEmail(
-    application.userId.email,
-    `${application.userId.firstName} ${application.userId.lastName}`,
-    application.jobTitle,
-    status
-  );
-
-  await Notification.create({
-    userId: application.userId._id,
-    title: `Application ${status}`,
-    message: `Your application for ${application.jobTitle} has been ${status.toLowerCase()}.`,
-    type: 'status',
-    link: '/dashboard',
-    metadata: { applicationId: application._id, status },
-  });
-
-  res.status(200).json({
-    success: true,
-    message: `Application ${status.toLowerCase()} successfully.`,
-    application,
-  });
-});
-
-// ==================== DELETE APPLICATION ====================
-
-export const deleteApplication = catchAsync(async (req, res, next) => {
-  const applicationId = req.params.id;
-  
-  if (!applicationId) {
-    return next(new AppError('Application ID is required.', 400));
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(applicationId)) {
-    return next(new AppError('Invalid application ID format.', 400));
-  }
-
-  const application = await Application.findById(applicationId);
-  
-  if (!application) {
-    return next(new AppError('Application not found.', 404));
-  }
-
-  await application.deleteOne();
-
-  res.status(200).json({
-    success: true,
-    message: 'Application deleted successfully.',
-  });
-});
-
-// ==================== CONTACT MANAGEMENT ====================
-
-export const getContacts = catchAsync(async (req, res, next) => {
-  const { page = 1, limit = 10, search, status } = req.query;
-  
-  const query = {};
-  
-  if (search) {
-    query.$or = [
-      { name: { $regex: search, $options: 'i' } },
-      { email: { $regex: search, $options: 'i' } },
-      { subject: { $regex: search, $options: 'i' } },
-    ];
-  }
-  
-  if (status) {
-    query.status = status;
-  }
-
-  const contacts = await Contact.find(query)
-    .populate('userId', 'firstName lastName email')
-    .populate('repliedBy', 'firstName lastName email')
-    .sort({ createdAt: -1 })
-    .limit(limit * 1)
-    .skip((page - 1) * limit);
-
-  const total = await Contact.countDocuments(query);
-
-  res.status(200).json({
-    success: true,
-    contacts,
-    totalPages: Math.ceil(total / limit),
-    currentPage: Number(page),
-    total,
-  });
-});
-
-export const updateContactStatus = catchAsync(async (req, res, next) => {
-  const contactId = req.params.id;
-  
-  if (!contactId) {
-    return next(new AppError('Contact ID is required.', 400));
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(contactId)) {
-    return next(new AppError('Invalid contact ID format.', 400));
-  }
-
-  const contact = await Contact.findById(contactId);
-  if (!contact) {
-    return next(new AppError('Contact message not found.', 404));
-  }
-
-  const { status } = req.body;
-  contact.status = status;
-  await contact.save();
-
-  res.status(200).json({
-    success: true,
-    message: 'Contact status updated.',
-    contact,
-  });
-});
-
-export const replyContact = catchAsync(async (req, res, next) => {
-  const contactId = req.params.id;
-  const { replyMessage } = req.body;
-  
-  if (!contactId) {
-    return next(new AppError('Contact ID is required.', 400));
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(contactId)) {
-    return next(new AppError('Invalid contact ID format.', 400));
-  }
-
-  const contact = await Contact.findById(contactId)
-    .populate('userId', 'firstName lastName email');
-  
-  if (!contact) {
-    return next(new AppError('Contact message not found.', 404));
-  }
-
-  contact.replyMessage = replyMessage;
-  contact.status = 'Replied';
-  contact.repliedAt = new Date();
-  contact.repliedBy = req.user._id;
-
-  await contact.save();
-
-  await sendContactReplyEmail(
-    contact.email,
-    contact.name,
-    contact.subject,
-    replyMessage
-  );
-
-  if (contact.userId) {
-    await Notification.create({
-      userId: contact.userId._id,
-      title: 'Reply to Your Inquiry',
-      message: `Admin has replied to your inquiry: ${contact.subject}`,
-      type: 'contact',
-      link: '/contact',
-    });
-  }
-
-  res.status(200).json({
-    success: true,
-    message: 'Reply sent successfully.',
-    contact,
-  });
-});
-
-export const deleteContact = catchAsync(async (req, res, next) => {
-  const contactId = req.params.id;
-  
-  if (!contactId) {
-    return next(new AppError('Contact ID is required.', 400));
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(contactId)) {
-    return next(new AppError('Invalid contact ID format.', 400));
-  }
-
-  const contact = await Contact.findById(contactId);
-  
-  if (!contact) {
-    return next(new AppError('Contact message not found.', 404));
-  }
-
-  await contact.deleteOne();
-
-  res.status(200).json({
-    success: true,
-    message: 'Contact message deleted successfully.',
-  });
-});
-
-// ==================== GLOBAL SEARCH ====================
-
-export const globalSearch = catchAsync(async (req, res, next) => {
-  const { q } = req.query;
-  
-  if (!q || q.length < 2) {
-    return res.status(200).json({
-      success: true,
-      results: {
-        users: [],
-        jobs: [],
-        applications: [],
-      },
-    });
-  }
-
-  const searchRegex = new RegExp(q, 'i');
-
-  const [users, jobs, applications] = await Promise.all([
-    User.find({
-      $or: [
-        { firstName: searchRegex },
-        { lastName: searchRegex },
-        { email: searchRegex },
-      ],
-      isDeleted: false,
-    }).select('firstName lastName email role isBlocked').limit(10),
-    
-    Job.find({
-      $or: [
-        { title: searchRegex },
-        { description: searchRegex },
-        { country: searchRegex },
-      ],
-      isHidden: false,
-    }).limit(10),
-    
-    Application.find({
-      $or: [
-        { firstName: searchRegex },
-        { lastName: searchRegex },
-        { email: searchRegex },
-        { trackingId: searchRegex },
-      ],
-    })
-    .populate('userId', 'firstName lastName email')
-    .populate('jobId', 'title')
-    .limit(10),
-  ]);
-
-  res.status(200).json({
-    success: true,
-    results: {
-      users,
-      jobs,
-      applications,
-    },
+    message: 'OTP sent successfully.',
   });
 });

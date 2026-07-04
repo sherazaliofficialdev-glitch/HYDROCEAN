@@ -16,9 +16,9 @@ const CompanyIntro = () => {
             className="relative overflow-hidden h-full min-h-[500px]"
           >
             <img
-              src="https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&q=80&w=1200"
+              src="/images/image (4).jpeg"
               alt="Hydrocean Marine Research"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+              className="w-full h-[800px] object-cover hover:scale-105 transition-transform duration-700"
             />
             {/* Floating Badge */}
             <motion.div

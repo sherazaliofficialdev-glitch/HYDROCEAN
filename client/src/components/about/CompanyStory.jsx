@@ -23,9 +23,9 @@ const CompanyStory = () => {
             className="relative overflow-hidden h-full min-h-[500px] order-1"
           >
             <img
-              src="https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&q=80&w=1200"
+              src="/images/images (1).jpeg"
               alt="Hydrocean Story"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+              className="w-full h-[750px] object-cover hover:scale-105 transition-transform duration-700"
             />
             <motion.div
               initial={{ scale: 0, opacity: 0 }}

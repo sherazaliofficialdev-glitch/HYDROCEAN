@@ -95,9 +95,9 @@ const MissionVision = () => {
             className="relative overflow-hidden h-full min-h-[500px] order-2 lg:order-2"
           >
             <img
-              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
+              src="/images/images (3).jpeg"
               alt="Mission Vision"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+              className="w-full h-[850px] object-cover hover:scale-105 transition-transform duration-700"
             />
           </motion.div>
         </div>
