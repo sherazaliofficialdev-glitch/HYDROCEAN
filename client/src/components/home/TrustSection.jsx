@@ -30,7 +30,7 @@ const TrustSection = () => {
               <div className="w-16 h-1 bg-primary-500 mt-6 rounded-full" />
 
               <p className="text-xl sm:text-2xl font-bold text-dark-200/90 mt-6 leading-snug">
-                Hydrocean is officially incorporated and registered under the Companies Act as a technology provider for marine and autonomous subsea exploration systems.
+                Wave pilot is officially incorporated and registered under the Companies Act as a technology provider for marine and autonomous subsea exploration systems.
               </p>
 
               {/* Registration Details */}

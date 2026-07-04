@@ -95,7 +95,7 @@ const ContactForm = () => {
                 </div>
                 <div>
                   <h4 className="font-bold text-dark-200 text-lg">Address</h4>
-                  <p className="text-slate-600 mt-1">Hydrocean Corporate HQ, Tech Sector 4, Islamabad, Pakistan</p>
+                  <p className="text-slate-600 mt-1">Wave pilot Corporate HQ, Tech Sector 4, Islamabad, Pakistan</p>
                 </div>
               </div>
             </div>

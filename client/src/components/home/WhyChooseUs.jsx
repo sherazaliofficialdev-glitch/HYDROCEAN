@@ -42,10 +42,10 @@ const WhyChooseUs = () => {
         {/* Center Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-xs font-mono font-bold uppercase tracking-widest text-primary-500">
-            Why Hydrocean
+            Why Wave pilot
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold text-dark-200 mt-3 tracking-tight">
-            Why Leading Research Labs Trust Hydrocean
+            Why Leading Research Labs Trust Wave pilot
           </h2>
           <div className="w-16 h-1 bg-primary-500 mx-auto mt-6 rounded-full" />
           <p className="text-lg text-slate-600 mt-4">

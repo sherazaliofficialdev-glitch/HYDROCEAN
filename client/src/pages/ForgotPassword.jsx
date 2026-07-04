@@ -28,7 +28,7 @@ const ForgotPassword = () => {
 
   return (
     <>
-      <MetaTags title="Forgot Password - Hydrocean Marine" />
+      <MetaTags title="Forgot Password - Wave pilot" />
       <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-20">
         <div className="w-full max-w-md">
           <motion.div

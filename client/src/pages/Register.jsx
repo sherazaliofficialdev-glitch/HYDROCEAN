@@ -74,7 +74,7 @@ const Register = () => {
 
   return (
     <>
-      <MetaTags title="Register - Hydrocean Marine" />
+      <MetaTags title="Register - " />
       <div className="min-h-screen flex flex-col md:flex-row bg-slate-950 text-white relative overflow-hidden">
         
         {/* LEFT SIDE - Image & Branding */}
@@ -120,13 +120,13 @@ const Register = () => {
                 Create Your<br />Account Today
               </h1>
               <p className="text-slate-300 text-sm leading-relaxed max-w-md">
-                Start your journey with Hydrocean Marine Systems. Apply for jobs, track applications, and build your career in marine technology.
+                Start your journey with  Systems. Apply for jobs, track applications, and build your career in marine technology.
               </p>
             </motion.div>
           </div>
 
           <div className="relative z-10 text-[10px] font-mono text-slate-500 border-t border-slate-800/50 pt-6">
-            <span>© {new Date().getFullYear()} Hydrocean Marine Systems</span>
+            <span>© {new Date().getFullYear()}  Systems</span>
           </div>
         </div>
 
@@ -145,7 +145,7 @@ const Register = () => {
           <div className="w-full max-w-md mx-auto space-y-6 mt-12 md:mt-0">
             <div className="text-center md:text-left">
               <h2 className="text-2xl font-bold text-white">Create Account</h2>
-              <p className="text-slate-400 text-sm mt-1">Join Hydrocean Marine</p>
+              <p className="text-slate-400 text-sm mt-1">Join </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">

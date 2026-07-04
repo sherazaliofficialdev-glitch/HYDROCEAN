@@ -1,6 +1,6 @@
 export const seoConfig = {
-  defaultTitle: 'Hydrocean Marine Systems - Autonomous Marine Vehicles',
-  defaultDescription: 'Hydrocean specializes in advanced USV and AUV marine systems for ocean exploration, research, and defense applications.',
+  defaultTitle: 'Wave pilot Systems - Autonomous Marine Vehicles',
+  defaultDescription: 'Wave pilotspecializes in advanced USV and AUV marine systems for ocean exploration, research, and defense applications.',
   defaultKeywords: 'USV, AUV, marine robotics, autonomous vehicles, ocean research, subsea technology',
   siteUrl: 'https://hydrocean.com',
   twitterHandle: '@hydrocean',
@@ -11,22 +11,22 @@ export const seoConfig = {
 
 export const pageSeo = {
   home: {
-    title: 'Hydrocean Marine Systems - USV & AUV Technology',
+    title: 'Wave pilot Systems - USV & AUV Technology',
     description: 'Leading provider of autonomous marine vehicles for ocean exploration, research, and defense.',
     keywords: 'USV, AUV, marine technology, autonomous vehicles, Hydrocean',
   },
   about: {
-    title: 'About Hydrocean - Marine Robotics & Autonomous Systems',
+    title: 'About Wave pilot- Marine Robotics & Autonomous Systems',
     description: 'Learn about Hydrocean\'s mission, vision, and cutting-edge marine technology.',
     keywords: 'about Hydrocean, marine technology, autonomous vehicles, USV, AUV',
   },
   jobs: {
-    title: 'Careers at Hydrocean - Marine Jobs & Opportunities',
+    title: 'Careers at Wave pilot- Marine Jobs & Opportunities',
     description: 'Explore exciting career opportunities in marine robotics and autonomous systems.',
     keywords: 'marine jobs, robotics careers, autonomous vehicles, USV jobs, AUV jobs',
   },
   dashboard: {
-    title: 'Dashboard - Hydrocean Marine',
+    title: 'Dashboard - Wave pilot',
     description: 'Manage your applications and track their status.',
     keywords: 'dashboard, applications, Hydrocean',
   },

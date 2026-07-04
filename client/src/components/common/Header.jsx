@@ -45,7 +45,7 @@ const Header = () => {
             </div>
             <div>
               <span className="font-sans font-extrabold text-base sm:text-lg tracking-tight text-white group-hover:text-primary-400 transition-colors">
-                HYDROCEAN
+                Wave pilot
               </span>
               <p className="text-[8px] font-mono tracking-widest text-slate-500 uppercase leading-none mt-0.5">
                 Marine Systems

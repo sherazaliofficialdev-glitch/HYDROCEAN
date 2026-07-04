@@ -44,7 +44,7 @@ const Login = () => {
 
   return (
     <>
-      <MetaTags title="Login - Hydrocean Marine" />
+      <MetaTags title="Login - Wave pilot" />
       <div className="min-h-screen flex flex-col md:flex-row bg-slate-950 text-white relative overflow-hidden">
         
         {/* LEFT SIDE - Image & Branding */}
@@ -90,13 +90,13 @@ const Login = () => {
                 Sign In to<br />Your Account
               </h1>
               <p className="text-slate-300 text-sm leading-relaxed max-w-md">
-                Access your recruitment dashboard, track applications, and manage your profile with Hydrocean Marine Systems.
+                Access your recruitment dashboard, track applications, and manage your profile with Wave pilot Systems.
               </p>
             </motion.div>
           </div>
 
           <div className="relative z-10 text-[10px] font-mono text-slate-500 border-t border-slate-800/50 pt-6">
-            <span>© {new Date().getFullYear()} Hydrocean Marine Systems</span>
+            <span>© {new Date().getFullYear()} Wave pilot Systems</span>
           </div>
         </div>
 

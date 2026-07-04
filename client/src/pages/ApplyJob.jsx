@@ -13,7 +13,7 @@ const ApplyJob = () => {
 
   return (
     <>
-      <MetaTags title={`Apply for ${jobTitle || 'Job'} - Hydrocean Marine`} />
+      <MetaTags title={`Apply for ${jobTitle || 'Job'} - Wave pilot`} />
       <Header />
       <main className="pt-20 pb-24 lg:pb-0 min-h-screen bg-slate-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

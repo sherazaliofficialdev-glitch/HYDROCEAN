@@ -25,7 +25,7 @@ const MissionVision = () => {
     {
       icon: Sparkles,
       title: 'Our Values',
-      description: 'Innovation, quality, sustainability, and collaboration drive everything we do at Hydrocean.',
+      description: 'Innovation, quality, sustainability, and collaboration drive everything we do at Wave pilot.',
       color: 'primary'
     }
   ];

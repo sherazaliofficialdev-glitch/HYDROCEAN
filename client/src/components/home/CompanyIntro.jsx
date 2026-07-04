@@ -17,7 +17,7 @@ const CompanyIntro = () => {
           >
             <img
               src="/images/image (4).jpeg"
-              alt="Hydrocean Marine Research"
+              alt="Wave pilot Marine Research"
               className="w-full h-[800px] object-cover hover:scale-105 transition-transform duration-700"
             />
             {/* Floating Badge */}
@@ -44,7 +44,7 @@ const CompanyIntro = () => {
             <div className="max-w-xl">
               {/* Small Tag */}
               <span className="text-xs font-mono font-bold uppercase tracking-widest text-primary-500">
-                About Hydrocean
+                About Wave pilot
               </span>
 
               {/* Bold Heading - Large */}
@@ -56,7 +56,7 @@ const CompanyIntro = () => {
 
               {/* Bold Description */}
               <p className="text-xl sm:text-2xl font-bold text-dark-200/90 mt-6 leading-snug">
-                Hydrocean is an international leader in the engineering, design, and manufacturing of high-magnetic density subsea electric actuators, brushless thrusters, and autonomous surface-to-deep-sea vehicles.
+                Wave pilot is an international leader in the engineering, design, and manufacturing of high-magnetic density subsea electric actuators, brushless thrusters, and autonomous surface-to-deep-sea vehicles.
               </p>
 
               {/* Medium Description */}

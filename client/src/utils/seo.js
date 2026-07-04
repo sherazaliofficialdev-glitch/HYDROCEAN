@@ -1,6 +1,6 @@
 export const SEO_CONFIG = {
-  title: 'Hydrocean Marine Systems - Autonomous Marine Vehicles',
-  description: 'Hydrocean specializes in advanced USV and AUV marine systems for ocean exploration, research, and defense applications.',
+  title: 'Wave pilot Systems - Autonomous Marine Vehicles',
+  description: 'Wave pilotspecializes in advanced USV and AUV marine systems for ocean exploration, research, and defense applications.',
   keywords: 'USV, AUV, marine robotics, autonomous vehicles, ocean research, subsea technology',
   siteUrl: 'https://hydrocean.com',
   twitterHandle: '@hydrocean',

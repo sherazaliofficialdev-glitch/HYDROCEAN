@@ -60,7 +60,7 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <MetaTags title="Admin Dashboard - Hydrocean Marine" />
+      <MetaTags title="Admin Dashboard - Wave pilot" />
       <Header />
       <main className="pt-20 pb-24 lg:pb-0 min-h-screen bg-slate-50">
         <div className="flex">

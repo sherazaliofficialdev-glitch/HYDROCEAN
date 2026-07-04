@@ -10,8 +10,8 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const sendOTP = async (email, otp, purpose = 'registration') => {
   const subject = purpose === 'registration' 
-    ? 'Verify Your Email - Hydrocean Marine'
-    : 'Reset Your Password - Hydrocean Marine';
+    ? 'Verify Your Email - Wave pilot'
+    : 'Reset Your Password - Wave pilot';
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #0f172a; color: #f8fafc; border-radius: 16px;">

@@ -2,8 +2,8 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const MetaTags = ({ 
-  title = 'Hydrocean Marine Systems - Autonomous Marine Vehicles',
-  description = 'Hydrocean specializes in advanced USV and AUV marine systems for ocean exploration, research, and defense applications.',
+  title = 'Wave pilot Systems - Autonomous Marine Vehicles',
+  description = 'Wave pilotspecializes in advanced USV and AUV marine systems for ocean exploration, research, and defense applications.',
   keywords = 'USV, AUV, marine robotics, autonomous vehicles, ocean research, subsea technology',
   image = '/og-image.jpg',
   url = '',
@@ -23,7 +23,7 @@ const MetaTags = ({
       <meta property="og:image" content={`${siteUrl}${image}`} />
       <meta property="og:url" content={fullUrl} />
       <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="Hydrocean Marine Systems" />
+      <meta property="og:site_name" content="Wave pilot Systems" />
       
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -43,7 +43,7 @@ const MetaTags = ({
         {JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          "name": "Hydrocean Marine Systems",
+          "name": "Wave pilot Systems",
           "description": description,
           "url": siteUrl,
           "logo": `${siteUrl}/logo.png`,

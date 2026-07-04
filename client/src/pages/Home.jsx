@@ -17,7 +17,7 @@ const Home = () => {
   return (
     <>
       <MetaTags 
-        title="Hydrocean Marine Systems - USV & AUV Technology"
+        title="Wave pilot Systems - USV & AUV Technology"
         description="Leading provider of autonomous marine vehicles for ocean exploration, research, and defense."
         keywords="USV, AUV, marine technology, autonomous vehicles, Hydrocean"
       />

@@ -1,4 +1,4 @@
-export const APP_NAME = 'Hydrocean Marine Systems';
+export const APP_NAME = 'Wave pilot Systems';
 export const APP_URL = 'https://hydrocean.com';
 
 export const STATUS_COLORS = {

@@ -5,7 +5,7 @@ const StructuredData = () => {
   const data = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Hydrocean Marine Systems',
+    name: 'Wave pilot Systems',
     description: 'Advanced USV and AUV marine systems for ocean exploration',
     url: 'https://hydrocean.com',
     logo: 'https://hydrocean.com/logo.png',

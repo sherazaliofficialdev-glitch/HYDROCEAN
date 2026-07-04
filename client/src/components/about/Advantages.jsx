@@ -48,7 +48,7 @@ const Advantages = () => {
           </h2>
           <div className="w-16 h-1 bg-primary-500 mx-auto mt-6 rounded-full" />
           <p className="text-lg text-slate-600 mt-4">
-            What sets Hydrocean apart in the marine technology industry.
+            What sets Wave pilot apart in the marine technology industry.
           </p>
         </div>
 

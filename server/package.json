@@ -1,7 +1,7 @@
 {
   "name": "hydrocean-server",
   "version": "1.0.0",
-  "description": "Hydrocean Marine Recruitment Portal Backend",
+  "description": "Wave pilot Recruitment Portal Backend",
   "main": "src/app.js",
   "type": "module",
   "scripts": {

@@ -16,9 +16,9 @@ const About = () => {
   return (
     <>
       <MetaTags 
-        title="About Hydrocean - Marine Robotics & Autonomous Systems"
-        description="Learn about Hydrocean's mission, vision, and cutting-edge marine technology for USV and AUV systems."
-        keywords="about Hydrocean, marine technology, autonomous vehicles, USV, AUV, subsea robotics"
+        title="About Wave pilot - Marine Robotics & Autonomous Systems"
+        description="Learn about Wave pilot's mission, vision, and cutting-edge marine technology for USV and AUV systems."
+        keywords="about Wave pilot, marine technology, autonomous vehicles, USV, AUV, subsea robotics"
       />
       <Header />
       <main>

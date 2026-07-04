@@ -14,10 +14,10 @@ const Footer = () => {
           <div className="md:col-span-5 space-y-4">
             <Link to="/" className="flex items-center space-x-3">
               <Compass className="h-8 w-8 text-primary-400" />
-              <span className="font-display font-bold text-lg uppercase tracking-wider">HYDROCEAN</span>
+              <span className="font-display font-bold text-lg uppercase tracking-wider">Wave pilot</span>
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              Hydrocean Intelligent Tech specializes in advanced marine systems, high-magnetic brushless subsea motors, actuators, and unmanned exploration submersibles.
+              Wave pilot Intelligent Tech specializes in advanced marine systems, high-magnetic brushless subsea motors, actuators, and unmanned exploration submersibles.
             </p>
             <p className="text-[10px] font-mono text-primary-400 font-bold tracking-widest uppercase">
               Pioneering Underwater Science
@@ -44,7 +44,7 @@ const Footer = () => {
             <div className="space-y-2 text-xs text-slate-400">
               <p className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 text-primary-400 shrink-0 mt-0.5" />
-                Hydrocean Corporate HQ, Tech Sector 4, Islamabad, Pakistan
+                Wave pilot Corporate HQ, Tech Sector 4, Islamabad, Pakistan
               </p>
               <p className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-primary-400 shrink-0" />
@@ -65,7 +65,7 @@ const Footer = () => {
 
         {/* Bottom */}
         <div className="border-t border-slate-900 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-[10px] font-mono text-slate-500 gap-4">
-          <p>© {currentYear} Hydrocean Marine Systems. All rights reserved.</p>
+          <p>© {currentYear} Wave pilot Marine Systems. All rights reserved.</p>
           <div className="flex items-center space-x-2">
             <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
             <span>SSL SECURED</span>

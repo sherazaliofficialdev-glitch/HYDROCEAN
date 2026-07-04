@@ -1,6 +1,6 @@
-# Hydrocean Marine Recruitment Portal
+# Wave pilot Marine Recruitment Portal
 
-## 🚀 Complete Recruitment Platform for Hydrocean Marine Systems
+## 🚀 Complete Recruitment Platform for Wave pilot Marine Systems
 
 ### Features
 
@@ -77,5 +77,5 @@
 ```bash
 git clone https://github.com/yourusername/hydrocean-portal.git
 cd hydrocean-portal# HYDROCEAN
-# HYDROCEAN
-# HYDROCEAN
+# Wave pilot
+# Wave pilot

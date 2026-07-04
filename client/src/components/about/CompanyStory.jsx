@@ -24,7 +24,7 @@ const CompanyStory = () => {
           >
             <img
               src="/images/images (1).jpeg"
-              alt="Hydrocean Story"
+              alt="Wave pilot Story"
               className="w-full h-[750px] object-cover hover:scale-105 transition-transform duration-700"
             />
             <motion.div
@@ -59,7 +59,7 @@ const CompanyStory = () => {
               <div className="w-16 h-1 bg-primary-500 mt-6 rounded-full" />
 
               <p className="text-xl sm:text-2xl font-bold text-dark-200/90 mt-6 leading-snug">
-                Hydrocean started as a small subsea motor lab in Islamabad, Pakistan, with a vision to revolutionize underwater exploration technology.
+                Wave pilot started as a small subsea motor lab in Islamabad, Pakistan, with a vision to revolutionize underwater exploration technology.
               </p>
 
               <p className="text-base text-slate-600 mt-4 leading-relaxed">

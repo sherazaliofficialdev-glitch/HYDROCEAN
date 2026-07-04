@@ -100,7 +100,7 @@ const Jobs = () => {
   return (
     <>
       <MetaTags 
-        title="Careers at Hydrocean - Marine Jobs & Opportunities"
+        title="Careers at Wave pilot- Marine Jobs & Opportunities"
         description="Explore exciting career opportunities in marine robotics, autonomous systems, and subsea technology at Hydrocean."
         keywords="marine jobs, robotics careers, autonomous vehicles, USV jobs, AUV jobs, subsea engineering"
       />

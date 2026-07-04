@@ -62,7 +62,7 @@ const ResetPassword = () => {
 
   return (
     <>
-      <MetaTags title="Reset Password - Hydrocean Marine" />
+      <MetaTags title="Reset Password - " />
       <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-20">
         <div className="w-full max-w-md">
           <motion.div
