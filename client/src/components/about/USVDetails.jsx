@@ -27,7 +27,7 @@ const USVDetails = () => {
             <img
               src="/images/images.png"
               alt="USV Technology"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+              className="w-full h-full  hover:scale-105 transition-transform duration-700"
             />
           </motion.div>
 

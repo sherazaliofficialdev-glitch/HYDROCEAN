@@ -210,7 +210,7 @@ const HeroSlider = () => {
             <img
   src={heroSlides[activeSlide].image}
   alt="Background"
-  className="absolute inset-0 w-full h-full object-cover"
+  className="absolute inset-0 w-full h-full "
 />
             {/* Gradient Overlay - Dark Premium */}
             <div className="absolute inset-0 bg-gradient-to-r from-slate-950/20 via-slate-900/30 to-slate-950/20" />
@@ -376,7 +376,7 @@ const HeroSlider = () => {
                     transition={{ duration: 0.6 }}
                     src={heroSlides[activeSlide].image}
                     alt="Marine Technology Preview"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full "
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                   
@@ -412,44 +412,10 @@ const HeroSlider = () => {
                 </div>
 
                 {/* Floating Badge - Top Left */}
-                <motion.div
-                  initial={{ x: -20, opacity: 0, rotate: -5 }}
-                  animate={{ x: 0, opacity: 1, rotate: 0 }}
-                  transition={{ delay: 1, type: "spring", stiffness: 100 }}
-                  whileHover={{ 
-                    scale: 1.1, 
-                    rotate: 3,
-                    boxShadow: "0 10px 30px rgba(0, 156, 166, 0.5)"
-                  }}
-                  className="absolute -left-6 top-12 bg-gradient-to-r from-primary-600 to-teal-500 p-4 rounded-2xl shadow-2xl cursor-pointer"
-                >
-                  <div className="text-white text-sm font-bold">AI Powered</div>
-                  <motion.div
-                    className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full"
-                    animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  />
-                </motion.div>
+                
 
                 {/* Floating Badge - Bottom Right */}
-                <motion.div
-                  initial={{ x: 20, opacity: 0, rotate: 5 }}
-                  animate={{ x: 0, opacity: 1, rotate: 0 }}
-                  transition={{ delay: 1.3, type: "spring", stiffness: 100 }}
-                  whileHover={{ 
-                    scale: 1.1, 
-                    rotate: -3,
-                    boxShadow: "0 10px 30px rgba(0, 156, 166, 0.5)"
-                  }}
-                  className="absolute -right-6 bottom-12 bg-gradient-to-r from-teal-500 to-primary-600 p-4 rounded-2xl shadow-2xl cursor-pointer"
-                >
-                  <div className="text-white text-sm font-bold">Deep Sea Tech</div>
-                  <motion.div
-                    className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full"
-                    animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
-                  />
-                </motion.div>
+                
 
                 {/* Floating Particles */}
                 {[...Array(8)].map((_, i) => (

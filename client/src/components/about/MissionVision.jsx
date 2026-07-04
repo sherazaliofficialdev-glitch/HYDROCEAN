@@ -97,7 +97,7 @@ const MissionVision = () => {
             <img
               src="/images/images (3).jpeg"
               alt="Mission Vision"
-              className="w-full h-[850px] object-cover hover:scale-105 transition-transform duration-700"
+              className="w-full h-[850px]  hover:scale-105 transition-transform duration-700"
             />
           </motion.div>
         </div>

@@ -134,7 +134,7 @@ const MaldivesHero = () => {
             <img
               src={current.image}
               alt={current.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full"
             />
             {/* ✅ Premium Overlay - Darker on left side for text readability */}
             <div className="absolute inset-0 bg-gradient-to-r from-slate-950/20 via-slate-950/20 to-slate-950/30" />
@@ -166,7 +166,7 @@ const MaldivesHero = () => {
                 <img
                   src={current.image}
                   alt={current.title}
-                  className="w-full h-[450px] object-cover"
+                  className="w-full h-[450px] "
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent" />
                 

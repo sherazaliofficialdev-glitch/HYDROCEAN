@@ -72,7 +72,7 @@ const AUVSection = () => {
             <img
               src="/images/images.png"
               alt="Autonomous Underwater Vehicle"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+              className="w-full h-full hover:scale-105 transition-transform duration-700"
             />
             <motion.div
               initial={{ scale: 0, opacity: 0 }}

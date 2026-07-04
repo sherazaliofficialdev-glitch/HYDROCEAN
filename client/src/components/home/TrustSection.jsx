@@ -103,7 +103,7 @@ const TrustSection = () => {
             <img
               src="/images/images (15).jpg"
               alt="Company Registration Certificate"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+              className="w-full h-full  hover:scale-105 transition-transform duration-700"
             />
             <motion.div
               initial={{ scale: 0, opacity: 0 }}

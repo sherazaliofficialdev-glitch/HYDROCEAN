@@ -27,7 +27,7 @@ const Avatar = ({
         src={src}
         alt={name || 'Avatar'}
         className={`
-          rounded-full object-cover border border-slate-200
+          rounded-full  border border-slate-200
           ${sizes[size]}
           ${className}
         `}

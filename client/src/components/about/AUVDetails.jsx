@@ -68,7 +68,7 @@ const AUVDetails = () => {
             <img
               src="/images/image (1).png"
               alt="AUV Technology"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+              className="w-full h-full  hover:scale-105 transition-transform duration-700"
             />
             <motion.div
               initial={{ scale: 0, opacity: 0 }}

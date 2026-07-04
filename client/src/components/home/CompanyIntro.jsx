@@ -18,7 +18,7 @@ const CompanyIntro = () => {
             <img
               src="/images/image (4).jpeg"
               alt="Wave pilot Marine Research"
-              className="w-full h-[800px] object-cover hover:scale-105 transition-transform duration-700"
+              className="w-full h-[800px] hover:scale-105 transition-transform duration-700"
             />
             {/* Floating Badge */}
             <motion.div

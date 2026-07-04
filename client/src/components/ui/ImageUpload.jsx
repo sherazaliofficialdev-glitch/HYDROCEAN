@@ -65,7 +65,7 @@ const ImageUpload = ({
             <img
               src={previewUrl}
               alt="Upload preview"
-              className="w-full h-full object-cover"
+              className="w-full h-full "
             />
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
               <button

@@ -25,7 +25,7 @@ const CompanyStory = () => {
             <img
               src="/images/images (1).jpeg"
               alt="Wave pilot Story"
-              className="w-full h-[750px] object-cover hover:scale-105 transition-transform duration-700"
+              className="w-full h-[750px]  hover:scale-105 transition-transform duration-700"
             />
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
