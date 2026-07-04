@@ -46,7 +46,8 @@ const JobsManagement = () => {
     e.preventDefault();
     try {
       if (editingJob) {
-        await API.put(`/jobs/${editingJob.id}`, formData);
+        const jobId = editingJob.id || editingJob._id;
+        await API.put(`/jobs/${jobId}`, formData);
         showSuccess('Job updated successfully.');
       } else {
         await API.post('/jobs', formData);
@@ -61,18 +62,34 @@ const JobsManagement = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  // ✅ FIX: Get correct job ID (job._id or job.id)
+  const handleDelete = async (job) => {
+    const jobId = job.id || job._id;
+    
+    if (!jobId) {
+      showError('Job ID is missing.');
+      return;
+    }
+
+    console.log('🗑️ Deleting Job ID:', jobId);
+
     if (!window.confirm('Are you sure you want to delete this job?')) return;
+    
     try {
-      await API.delete(`/jobs/${id}`);
+      await API.delete(`/jobs/${jobId}`);
       showSuccess('Job deleted successfully.');
       fetchJobs();
     } catch (error) {
-      showError('Failed to delete job.');
+      console.error('Delete error:', error);
+      showError(error.response?.data?.message || 'Failed to delete job.');
     }
   };
 
+  // ✅ FIX: Get correct job ID for edit
   const handleEdit = (job) => {
+    const jobId = job.id || job._id;
+    console.log('✏️ Editing Job ID:', jobId);
+    
     setEditingJob(job);
     setFormData({
       title: job.title,
@@ -84,6 +101,26 @@ const JobsManagement = () => {
       requirements: job.requirements || []
     });
     setShowModal(true);
+  };
+
+  // ✅ FIX: Get correct job ID for toggle
+  const handleToggle = async (job, field) => {
+    const jobId = job.id || job._id;
+    
+    if (!jobId) {
+      showError('Job ID is missing.');
+      return;
+    }
+
+    console.log(`🔄 Toggling ${field} for Job ID:`, jobId);
+    
+    try {
+      await API.put(`/jobs/${jobId}/toggle/${field}`);
+      fetchJobs();
+    } catch (error) {
+      console.error('Toggle error:', error);
+      showError('Failed to toggle job status.');
+    }
   };
 
   if (loading && jobs.length === 0) {
@@ -123,38 +160,68 @@ const JobsManagement = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-4">
-        {jobs.map((job) => (
-          <div key={job.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <div>
-              <h4 className="font-bold text-dark-200">{job.title}</h4>
-              <div className="flex flex-wrap items-center gap-3 mt-1">
-                <span className="text-xs text-slate-500">{job.country}</span>
-                <span className="text-xs text-slate-500">{job.salary}</span>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                  job.isOpen ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
-                }`}>
-                  {job.isOpen ? 'Open' : 'Closed'}
-                </span>
+        {jobs.map((job) => {
+          // ✅ Get correct job ID
+          const jobId = job.id || job._id;
+          
+          return (
+            <div key={jobId} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <div>
+                <h4 className="font-bold text-dark-200">{job.title}</h4>
+                <div className="flex flex-wrap items-center gap-3 mt-1">
+                  <span className="text-xs text-slate-500">{job.country}</span>
+                  <span className="text-xs text-slate-500">{job.salary}</span>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                    job.isOpen ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+                  }`}>
+                    {job.isOpen ? 'Open' : 'Closed'}
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 mt-3 sm:mt-0">
+                {/* ✅ Toggle Open/Close */}
+                <button
+                  onClick={() => handleToggle(job, 'isOpen')}
+                  className={`p-1.5 rounded-lg transition ${
+                    job.isOpen ? 'text-emerald-500 hover:bg-emerald-50' : 'text-rose-500 hover:bg-rose-50'
+                  }`}
+                  title={job.isOpen ? 'Close Job' : 'Open Job'}
+                >
+                  {job.isOpen ? '🔓' : '🔒'}
+                </button>
+                
+                {/* ✅ Toggle Hidden */}
+                <button
+                  onClick={() => handleToggle(job, 'isHidden')}
+                  className={`p-1.5 rounded-lg transition ${
+                    job.isHidden ? 'text-amber-500 hover:bg-amber-50' : 'text-slate-400 hover:bg-slate-100'
+                  }`}
+                  title={job.isHidden ? 'Show Job' : 'Hide Job'}
+                >
+                  {job.isHidden ? '🙈' : '👁️'}
+                </button>
+                
+                {/* ✅ Edit Button */}
+                <button
+                  onClick={() => handleEdit(job)}
+                  className="p-1.5 text-primary-500 hover:bg-primary-50 rounded-lg transition"
+                  title="Edit"
+                >
+                  <Edit2 className="h-4 w-4" />
+                </button>
+                
+                {/* ✅ Delete Button - Pass whole job object */}
+                <button
+                  onClick={() => handleDelete(job)}
+                  className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"
+                  title="Delete"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
               </div>
             </div>
-            <div className="flex items-center gap-2 mt-3 sm:mt-0">
-              <button
-                onClick={() => handleEdit(job)}
-                className="p-1.5 text-primary-500 hover:bg-primary-50 rounded-lg transition"
-                title="Edit"
-              >
-                <Edit2 className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => handleDelete(job.id)}
-                className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"
-                title="Delete"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <Pagination
@@ -163,6 +230,7 @@ const JobsManagement = () => {
         onPageChange={setPage}
       />
 
+      {/* Modal */}
       <Modal
         isOpen={showModal}
         onClose={() => { setShowModal(false); setEditingJob(null); }}
@@ -232,5 +300,4 @@ const JobsManagement = () => {
   );
 };
 
-// ✅ ADD THIS - Default export
 export default JobsManagement;
