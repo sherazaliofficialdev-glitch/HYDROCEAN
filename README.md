@@ -1,81 +1,88 @@
-# Wave pilot Marine Recruitment Portal
+# 🌊 Hydrocean Marine Recruitment Portal
 
-## 🚀 Complete Recruitment Platform for Wave pilot Marine Systems
+A complete recruitment portal for Hydrocean Marine Systems. Professional platform for job applications, applicant tracking, and administrative management.
 
-### Features
+---
 
-#### 🌐 Website
-- Home Page with Hero Slider
-- About Page
-- Jobs Page
-- Contact Section (Home + About)
-- Company Registration/Trust Section
-- Fully Responsive Design
-- Mobile Bottom Navigation
+## 📸 Preview
 
-#### 👤 User Features
-- Register with OTP Verification
-- Login with JWT
-- Forgot Password with OTP
-- Auto Login After Registration
-- User Dashboard
-- Apply for Jobs (2-Step Form)
-- Upload CV, Photo, Deposit Slip
-- Application History
-- Real-time Status Updates
-- In-App Notifications
+![Hydrocean Portal](https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&q=80&w=1200)
 
-#### 🛡️ Admin Features
-- Real-time Dashboard with Charts
-- User Management (Block/Delete/Sub Admin)
-- Job Management (Add/Edit/Delete)
-- Application Review (Approve/Reject)
-- Contact Management with Email Reply
-- Global Search
-- Pagination Everywhere
+---
 
-#### 🔒 Security
-- JWT Authentication
-- Role-Based Access Control
-- Main Admin (via .env)
-- Sub Admin with Permissions
-- Protected Routes
-- Rate Limiting
-- Input Validation
+## ✨ Features
 
-#### 📊 Dashboard
-- Total Users
-- Today's Users
-- Total Jobs
-- Applications Statistics
-- Visitor Analytics (Daily/Weekly/Monthly)
-- Recent Activities
-- Status Breakdown Charts
+### 🌐 Website Pages
+- **Home Page** - Maldives Hero Slider, Company Introduction, USV/AUV Sections, Trust Section, Featured Jobs, Power Bank Offer, Contact
+- **About Page** - Company Story, Mission/Vision, USV/AUV Details, Working Process, Timeline, Contact
+- **Jobs Page** - Job Listings with Search & Filters, Application Form
 
-### Tech Stack
+### 👤 User Features
+- ✅ Register (First Name, Last Name, Email, Password, Confirm Password)
+- ✅ Login with JWT Authentication
+- ✅ Forgot Password with OTP
+- ✅ User Dashboard
+- ✅ Apply for Jobs (2-Step Form)
+- ✅ Upload CV, Photo, Deposit Slip
+- ✅ Application History (Pending/Approved/Rejected)
+- ✅ In-App Notifications
 
-#### Frontend
-- React 18
-- Tailwind CSS
-- Framer Motion (Animations)
-- React Router v6
-- Axios
-- Lucide Icons
+### 🛡️ Admin Features
+- ✅ Real-time Dashboard with Charts
+- ✅ User Management (Block/Delete/Sub Admin)
+- ✅ Job Management (Add/Edit/Delete)
+- ✅ Application Review (Approve/Reject)
+- ✅ Contact Management with Email Reply
+- ✅ Global Search (Users + Jobs + Applications)
+- ✅ Pagination Everywhere
 
-#### Backend
-- Node.js
-- Express.js
-- MongoDB (Mongoose)
-- JWT Authentication
-- Nodemailer (Emails)
-- Cloudinary (File Upload)
-- bcryptjs (Password Hashing)
+### 🎨 Design Features
+- ✅ Fully Responsive (Mobile, Tablet, Desktop)
+- ✅ Mobile Bottom Navigation (Facebook style)
+- ✅ Luxury Premium UI/UX
+- ✅ Smooth Animations (Framer Motion)
+- ✅ Glassmorphism Effects
+- ✅ Professional Color Scheme
 
-### Installation
+### 🔒 Security
+- ✅ JWT Authentication
+- ✅ Role-Based Access Control (Admin/Sub Admin/User)
+- ✅ Protected Routes
+- ✅ Rate Limiting
+- ✅ Password Hashing (bcryptjs)
 
-#### 1. Clone the Repository
-```bash
-git clone https://github.com/yourusername/Wave pilot-portal.git
-cd Wave pilot-portal# Wave pilot
-# Wave pilot
-# Wave pilot
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+| Technology | Version |
+|------------|---------|
+| React | 18.2.0 |
+| Vite | 4.5.0 |
+| Tailwind CSS | 3.3.5 |
+| Framer Motion | 10.16.5 |
+| React Router | 6.20.1 |
+| Axios | 1.6.2 |
+| Lucide React | 0.294.0 |
+| React Hot Toast | 2.4.1 |
+| React Helmet Async | 2.0.4 |
+
+### Backend
+| Technology | Version |
+|------------|---------|
+| Node.js | 18+ |
+| Express.js | 4.18.2 |
+| MongoDB | 8.0.3 |
+| Mongoose | 8.0.3 |
+| JWT | 9.0.2 |
+| bcryptjs | 2.4.3 |
+| Nodemailer | 6.9.7 |
+| Cloudinary | 1.41.0 |
+| Multer | 1.4.5 |
+| Helmet | 7.1.0 |
+| CORS | 2.8.5 |
+
+---
+
+## 📁 Project Structure
