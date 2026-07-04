@@ -16,7 +16,7 @@ const CompanyIntro = () => {
             className="relative overflow-hidden h-full min-h-[500px]"
           >
             <img
-              src="/images/image (4).jpeg"
+              src="/images/images1.png"
               alt="Wave pilot Marine Research"
               className="w-full h-[800px] hover:scale-105 transition-transform duration-700"
             />
