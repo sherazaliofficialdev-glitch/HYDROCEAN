@@ -56,7 +56,7 @@ console.log("Step 2: User created");
   // ✅ Send welcome email (optional - don't wait for it)
   console.log("Step 3: Before Welcome Email");
   try {
-     sendWelcomeEmail(email, `${firstName} ${lastName}`);
+    await sendWelcomeEmail(email, `${firstName} ${lastName}`);
   } catch (error) {
     console.log('⚠️ Welcome email failed but user registered:', error.message);
   }
