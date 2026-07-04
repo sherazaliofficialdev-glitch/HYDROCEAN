@@ -32,8 +32,9 @@ const Home = () => {
         <HeroSlider />
         
         <CompanyIntro />
-        <USVSection />
+       
         <AUVSection />
+         <USVSection />
         <WhyChooseUs />
         <TrustSection />
         <FeaturedJobs />
