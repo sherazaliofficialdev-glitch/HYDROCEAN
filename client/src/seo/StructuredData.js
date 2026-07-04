@@ -7,8 +7,8 @@ const StructuredData = () => {
     '@type': 'Organization',
     name: 'Wave pilot Systems',
     description: 'Advanced USV and AUV marine systems for ocean exploration',
-    url: 'https://hydrocean.com',
-    logo: 'https://hydrocean.com/logo.png',
+    url: 'https://Wave pilot.com',
+    logo: 'https://Wave pilot.com/logo.png',
     contactPoint: {
       '@type': 'ContactPoint',
       email: 'wavepilot1@gmail.com',
@@ -16,8 +16,8 @@ const StructuredData = () => {
       availableLanguage: ['English', 'Urdu'],
     },
     sameAs: [
-      'https://linkedin.com/company/hydrocean',
-      'https://facebook.com/hydrocean',
+      'https://linkedin.com/company/Wave pilot',
+      'https://facebook.com/Wave pilot',
     ],
   };
 

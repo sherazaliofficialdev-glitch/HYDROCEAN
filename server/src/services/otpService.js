@@ -15,7 +15,7 @@ export const sendOTP = async (email, otp, purpose = 'registration') => {
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #0f172a; color: #f8fafc; border-radius: 16px;">
-      <h1 style="color: #0ea5e9; text-align: center;">HYDROCEAN</h1>
+      <h1 style="color: #0ea5e9; text-align: center;">Wave pilot</h1>
       <h2 style="text-align: center;">${purpose === 'registration' ? 'Email Verification' : 'Password Reset'}</h2>
       <p style="text-align: center; font-size: 16px;">Your OTP code is:</p>
       <div style="text-align: center; background: #1e293b; padding: 16px; border-radius: 12px; margin: 20px 0;">

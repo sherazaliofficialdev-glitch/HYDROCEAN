@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   User, Briefcase, Clock, CheckCircle, XCircle, 
-  FileText, Bell, LogOut, Settings 
+  FileText, Bell, Settings, LogOut 
 } from 'lucide-react';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import BottomNav from '../components/common/BottomNav';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+// ✅ Fix import path
 import ApplicationStats from '../components/dashboard/ApplicationStats';
 import MyApplications from '../components/dashboard/MyApplications';
 import NotificationsList from '../components/dashboard/NotificationsList';
@@ -63,39 +64,36 @@ const UserDashboard = () => {
 
   return (
     <>
-      <MetaTags title="Dashboard - " />
+      <MetaTags title="Dashboard - Wave pilotMarine" />
       <Header />
       <main className="pt-20 pb-24 lg:pb-0 min-h-screen bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-dark-200">
-                Welcome back, {user?.firstName}!
+              <h1 className="text-xl sm:text-2xl font-bold text-dark-200">
+                Welcome back, {user?.firstName}! 👋
               </h1>
-              <p className="text-slate-500 text-sm">
+              <p className="text-sm text-slate-500">
                 Manage your applications and track their status
               </p>
             </div>
             <button
               onClick={logout}
-              className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl text-sm font-semibold hover:bg-rose-100 transition"
+              className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl text-sm font-semibold hover:bg-rose-100 transition shrink-0"
             >
               <LogOut className="h-4.5 w-4.5" />
               Logout
             </button>
           </div>
 
-          {/* Stats */}
           {stats && <ApplicationStats stats={stats} />}
 
-          {/* Tabs */}
-          <div className="flex gap-2 border-b border-slate-200 mb-6">
+          <div className="flex gap-2 border-b border-slate-200 mb-4 overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold border-b-2 transition ${
+                className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold border-b-2 transition whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'border-primary-500 text-primary-500'
                     : 'border-transparent text-slate-500 hover:text-slate-700'
@@ -107,13 +105,11 @@ const UserDashboard = () => {
             ))}
           </div>
 
-          {/* Tab Content */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-6">
             {activeTab === 'overview' && (
               <div className="space-y-6">
-                {/* Profile Summary */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-slate-50 rounded-xl">
-                  <div className="w-16 h-16 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center text-primary-500 text-2xl font-bold">
+                  <div className="w-14 h-14 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center text-primary-500 text-xl font-bold">
                     {user?.firstName?.[0]}{user?.lastName?.[0]}
                   </div>
                   <div>
@@ -127,35 +123,53 @@ const UserDashboard = () => {
                   </div>
                 </div>
 
-                {/* Quick Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <div className="p-4 bg-primary-50 rounded-xl border border-primary-100">
-                    <p className="text-2xl font-bold text-primary-600">{stats?.total || 0}</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="p-3 bg-primary-50 rounded-xl border border-primary-100">
+                    <p className="text-xl font-bold text-primary-600">{stats?.total || 0}</p>
                     <p className="text-xs text-slate-500">Total Applications</p>
                   </div>
-                  <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
-                    <p className="text-2xl font-bold text-amber-600">{stats?.pending || 0}</p>
+                  <div className="p-3 bg-amber-50 rounded-xl border border-amber-100">
+                    <p className="text-xl font-bold text-amber-600">{stats?.pending || 0}</p>
                     <p className="text-xs text-slate-500">Pending</p>
                   </div>
-                  <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                    <p className="text-2xl font-bold text-emerald-600">{stats?.approved || 0}</p>
+                  <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                    <p className="text-xl font-bold text-emerald-600">{stats?.approved || 0}</p>
                     <p className="text-xs text-slate-500">Approved</p>
                   </div>
-                  <div className="p-4 bg-rose-50 rounded-xl border border-rose-100">
-                    <p className="text-2xl font-bold text-rose-600">{stats?.rejected || 0}</p>
+                  <div className="p-3 bg-rose-50 rounded-xl border border-rose-100">
+                    <p className="text-xl font-bold text-rose-600">{stats?.rejected || 0}</p>
                     <p className="text-xs text-slate-500">Rejected</p>
                   </div>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-100">
+                  <Link
+                    to="/jobs"
+                    className="flex items-center justify-center gap-2 p-3 bg-primary-50 hover:bg-primary-100 text-primary-600 font-semibold rounded-xl transition text-sm"
+                  >
+                    <Briefcase className="h-4 w-4" />
+                    Browse Jobs
+                  </Link>
+                  <button
+                    onClick={() => setActiveTab('applications')}
+                    className="flex items-center justify-center gap-2 p-3 bg-slate-50 hover:bg-slate-100 text-slate-600 font-semibold rounded-xl transition text-sm"
+                  >
+                    <FileText className="h-4 w-4" />
+                    Applications
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('notifications')}
+                    className="flex items-center justify-center gap-2 p-3 bg-slate-50 hover:bg-slate-100 text-slate-600 font-semibold rounded-xl transition text-sm"
+                  >
+                    <Bell className="h-4 w-4" />
+                    Notifications
+                  </button>
                 </div>
               </div>
             )}
 
-            {activeTab === 'applications' && (
-              <MyApplications applications={applications} />
-            )}
-
-            {activeTab === 'notifications' && (
-              <NotificationsList />
-            )}
+            {activeTab === 'applications' && <MyApplications />}
+            {activeTab === 'notifications' && <NotificationsList />}
           </div>
         </div>
       </main>

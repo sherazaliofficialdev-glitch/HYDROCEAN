@@ -2,8 +2,8 @@ export const SEO_CONFIG = {
   title: 'Wave pilot Systems - Autonomous Marine Vehicles',
   description: 'Wave pilotspecializes in advanced USV and AUV marine systems for ocean exploration, research, and defense applications.',
   keywords: 'USV, AUV, marine robotics, autonomous vehicles, ocean research, subsea technology',
-  siteUrl: 'https://hydrocean.com',
-  twitterHandle: '@hydrocean',
+  siteUrl: 'https://Wave pilot.com',
+  twitterHandle: '@Wave pilot',
   ogImage: '/og-image.jpg',
   favicon: '/favicon.ico',
 };

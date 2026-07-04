@@ -1,5 +1,5 @@
 export const APP_NAME = 'Wave pilot Systems';
-export const APP_URL = 'https://hydrocean.com';
+export const APP_URL = 'https://Wave pilot.com';
 
 export const STATUS_COLORS = {
   Pending: 'bg-amber-50 text-amber-600 border-amber-200',

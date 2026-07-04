@@ -15,7 +15,7 @@ export const uploadToCloudinary = async (fileBuffer, options = {}) => {
     return new Promise((resolve, reject) => {
       // ✅ Using upload_stream for buffer upload
       const uploadOptions = {
-        folder: options.folder || 'hydrocean',
+        folder: options.folder || 'Wave pilot',
         resource_type: options.resource_type || 'auto',
         quality: 'auto:good',
         transformation: options.transformation || [
@@ -57,7 +57,7 @@ export const uploadToCloudinary = async (fileBuffer, options = {}) => {
   }
 };
 
-export const uploadMultiple = async (files, folder = 'hydrocean') => {
+export const uploadMultiple = async (files, folder = 'Wave pilot') => {
   const uploads = [];
   
   for (const [key, fileArray] of Object.entries(files)) {

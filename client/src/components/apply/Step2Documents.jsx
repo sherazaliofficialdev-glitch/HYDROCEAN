@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileUp, Camera, CreditCard, FileText } from 'lucide-react';
+import { FileUp, Camera, CreditCard, FileText, Landmark, User, Award } from 'lucide-react';
 
 const Step2Documents = ({ formData, onFileChange, onChange }) => {
   return (
@@ -95,10 +95,33 @@ const Step2Documents = ({ formData, onFileChange, onChange }) => {
         />
       </div>
 
+      {/* ✅ Updated Payment Instructions */}
       <div className="bg-primary-50 border border-primary-200 rounded-xl p-4 text-sm text-primary-800">
-        <p className="font-semibold">Payment Instructions:</p>
-        <p className="mt-1">Please deposit the application fee at Meezan Bank and upload the deposit slip above.</p>
-        <p className="text-xs mt-1 text-primary-600 font-mono">Account: PK84MEZN0095010105700533</p>
+        <p className="font-semibold text-lg mb-3 flex items-center gap-2">
+          <Landmark className="h-5 w-5" />
+          Payment Instructions:
+        </p>
+        <div className="space-y-2 font-mono bg-white/50 p-4 rounded-lg border border-primary-100">
+          <div className="flex items-center gap-3">
+            <User className="h-4 w-4 text-primary-600" />
+            <span><strong>Representative:</strong> HAMZA ARIF</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Award className="h-4 w-4 text-primary-600" />
+            <span><strong>Registration Number:</strong> 95010105700533</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <CreditCard className="h-4 w-4 text-primary-600" />
+            <span><strong>IBAN:</strong> PK84MEZN0095010105700533</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Landmark className="h-4 w-4 text-primary-600" />
+            <span><strong>Branch:</strong> KOT ADDU BRANCH</span>
+          </div>
+        </div>
+        <p className="text-xs mt-3 text-primary-600">
+          Please deposit the application fee at Meezan Bank and upload the deposit slip above.
+        </p>
       </div>
     </div>
   );

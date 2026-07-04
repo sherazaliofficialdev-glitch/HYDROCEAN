@@ -1,5 +1,5 @@
 {
-  "name": "hydrocean-server",
+  "name": "Wave pilot-server",
   "version": "1.0.0",
   "description": "Wave pilot Recruitment Portal Backend",
   "main": "src/app.js",

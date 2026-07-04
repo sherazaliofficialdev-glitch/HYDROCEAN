@@ -75,7 +75,7 @@
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/hydrocean-portal.git
-cd hydrocean-portal# HYDROCEAN
+git clone https://github.com/yourusername/Wave pilot-portal.git
+cd Wave pilot-portal# Wave pilot
 # Wave pilot
 # Wave pilot

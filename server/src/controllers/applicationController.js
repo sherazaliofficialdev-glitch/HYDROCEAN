@@ -89,7 +89,7 @@ export const applyForJob = catchAsync(async (req, res, next) => {
         console.error('❌ Photo buffer is empty');
       } else {
         const photoResult = await uploadToCloudinary(photoFile.buffer, {
-          folder: 'hydrocean/applicants/photos',
+          folder: 'Wave pilot/applicants/photos',
           resource_type: 'image',
         });
         candidatePhotoUrl = photoResult.secure_url;
@@ -114,7 +114,7 @@ export const applyForJob = catchAsync(async (req, res, next) => {
         console.error('❌ CV buffer is empty');
       } else {
         const cvResult = await uploadToCloudinary(cvFile.buffer, {
-          folder: 'hydrocean/applicants/cv',
+          folder: 'Wave pilot/applicants/cv',
           resource_type: 'auto',
         });
         cvUrl = cvResult.secure_url;
@@ -139,7 +139,7 @@ export const applyForJob = catchAsync(async (req, res, next) => {
         console.error('❌ Deposit slip buffer is empty');
       } else {
         const slipResult = await uploadToCloudinary(slipFile.buffer, {
-          folder: 'hydrocean/applicants/deposits',
+          folder: 'Wave pilot/applicants/deposits',
           resource_type: 'image',
         });
         depositSlipUrl = slipResult.secure_url;

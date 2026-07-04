@@ -97,7 +97,7 @@ const Register = () => {
               </div>
               <div>
                 <span className="font-extrabold text-xl tracking-tight text-white block">
-                  HYDROCEAN
+                  Wave pilot
                 </span>
                 <p className="text-[9px] font-mono tracking-widest text-primary-400/80 uppercase">
                   Marine Systems

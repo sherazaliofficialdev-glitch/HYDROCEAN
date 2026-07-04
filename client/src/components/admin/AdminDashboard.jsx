@@ -60,30 +60,35 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <MetaTags title="Admin Dashboard - Wave pilot" />
+      <MetaTags title="Admin Dashboard - Wave pilotMarine" />
       <Header />
       <main className="pt-20 pb-24 lg:pb-0 min-h-screen bg-slate-50">
-        <div className="flex">
-          <div className="hidden lg:block w-64 min-h-screen bg-white border-r border-slate-200 sticky top-20">
-            <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-          </div>
+        <div className="flex flex-col lg:flex-row">
+          {/* ✅ Sidebar - Desktop & Mobile (via hamburger) */}
+          <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-          <div className="flex-1">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          {/* ✅ Main Content - Full width on mobile */}
+          <div className="flex-1 lg:ml-0">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+              {/* Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
                 <div>
-                  <h1 className="text-2xl font-bold text-dark-200">
+                  <h1 className="text-xl sm:text-2xl font-bold text-dark-200">
                     Admin Dashboard
                   </h1>
-                  <p className="text-slate-500 text-sm">
+                  <p className="text-slate-500 text-xs sm:text-sm">
                     Welcome back, {user?.firstName}! Here's what's happening.
                   </p>
                 </div>
-                <GlobalSearch />
+                {/* ✅ GlobalSearch - Hidden on mobile, visible on tablet+ */}
+                <div className="hidden sm:block">
+                  <GlobalSearch />
+                </div>
               </div>
 
+              {/* ✅ Stats Cards - Responsive grid */}
               {activeTab === 'dashboard' && stats && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 sm:gap-4 mb-6 sm:mb-8">
                   <StatCard icon={Users} label="Total Users" value={stats.totalUsers} color="blue" />
                   <StatCard icon={UserPlus} label="Today's Users" value={stats.usersToday} color="green" />
                   <StatCard icon={Briefcase} label="Total Jobs" value={stats.totalJobs} color="purple" />
@@ -97,17 +102,18 @@ const AdminDashboard = () => {
                 </div>
               )}
 
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+              {/* ✅ Tab Content - Full width */}
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-6 overflow-x-auto">
                 {activeTab === 'dashboard' && (
-                  <div className="space-y-6">
-                    <h2 className="text-lg font-bold text-dark-200">Recent Activity</h2>
+                  <div className="space-y-4 sm:space-y-6">
+                    <h2 className="text-base sm:text-lg font-bold text-dark-200">Recent Activity</h2>
                     {stats?.recentActivities?.length > 0 ? (
                       <div className="space-y-3">
                         {stats.recentActivities.map((activity, index) => (
-                          <div key={index} className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
-                            <div className="w-2 h-2 rounded-full bg-primary-500 mt-2" />
-                            <div>
-                              <p className="text-sm font-semibold text-dark-200">{activity.action}</p>
+                          <div key={index} className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl text-sm">
+                            <div className="w-2 h-2 rounded-full bg-primary-500 mt-2 shrink-0" />
+                            <div className="min-w-0">
+                              <p className="font-semibold text-dark-200 text-sm sm:text-base">{activity.action}</p>
                               <p className="text-xs text-slate-500">{activity.description}</p>
                               <p className="text-[10px] text-slate-400 mt-1">
                                 {new Date(activity.timestamp).toLocaleString()}
@@ -155,16 +161,15 @@ const StatCard = ({ icon: Icon, label, value, color }) => {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`p-4 rounded-xl border ${colors[color]}`}
+      className={`p-3 sm:p-4 rounded-xl border ${colors[color]} shadow-sm`}
     >
-      <div className="flex items-center gap-2">
-        <Icon className="h-4.5 w-4.5" />
-        <span className="text-xs font-medium text-slate-500">{label}</span>
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        <Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
+        <span className="text-[10px] sm:text-xs font-medium text-slate-500 truncate">{label}</span>
       </div>
-      <p className="text-2xl font-bold mt-1">{value || 0}</p>
+      <p className="text-lg sm:text-2xl font-bold mt-0.5 sm:mt-1">{value || 0}</p>
     </motion.div>
   );
 };
 
-// ✅ ADD THIS - Default export
 export default AdminDashboard;

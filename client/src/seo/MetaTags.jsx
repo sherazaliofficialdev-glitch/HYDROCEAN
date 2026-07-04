@@ -8,7 +8,7 @@ const MetaTags = ({
   image = '/og-image.jpg',
   url = '',
 }) => {
-  const siteUrl = 'https://hydrocean.com';
+  const siteUrl = 'https://Wave pilot.com';
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
 
   return (
@@ -53,8 +53,8 @@ const MetaTags = ({
             "contactType": "customer service"
           },
           "sameAs": [
-            "https://linkedin.com/company/hydrocean",
-            "https://facebook.com/hydrocean"
+            "https://linkedin.com/company/Wave pilot",
+            "https://facebook.com/Wave pilot"
           ]
         })}
       </script>

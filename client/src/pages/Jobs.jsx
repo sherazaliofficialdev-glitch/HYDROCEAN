@@ -7,6 +7,7 @@ import BottomNav from '../components/common/BottomNav';
 import JobList from '../components/jobs/JobList';
 import JobFilters from '../components/jobs/JobFilters';
 import ApplicationForm from '../components/apply/ApplicationForm';
+import PowerBankOffer from '../components/common/PowerBankOffer';  // ✅ New Import
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
@@ -53,17 +54,7 @@ const Jobs = () => {
     try {
       const params = new URLSearchParams(filters);
       const response = await API.get(`/jobs?${params}`);
-      
-      // ✅ Debug - Check if jobs have _id
-      console.log('📋 Jobs API Response:', response.data);
-      
-      const jobsData = response.data.jobs || [];
-      if (jobsData.length > 0) {
-        console.log('📋 First job:', jobsData[0]);
-        console.log('📋 Job ID field:', jobsData[0].id || jobsData[0]._id);
-      }
-      
-      setJobs(jobsData);
+      setJobs(response.data.jobs || []);
     } catch (error) {
       console.error('Error fetching jobs:', error);
     } finally {
@@ -72,16 +63,12 @@ const Jobs = () => {
   };
 
   const handleApplyClick = (job) => {
-    const jobId = job.id || job._id;
-    console.log('🟢 Apply Clicked - Job ID:', jobId);
-    console.log('🟢 Apply Clicked - Job Title:', job.title);
-    
     if (!isAuthenticated) {
-      sessionStorage.setItem('pendingJobId', jobId);
+      sessionStorage.setItem('pendingJobId', job.id);
       navigate('/login');
       return;
     }
-    setSelectedJobId(jobId);
+    setSelectedJobId(job.id);
     setTimeout(() => {
       document.getElementById('application-form-section')?.scrollIntoView({ 
         behavior: 'smooth' 
@@ -101,7 +88,7 @@ const Jobs = () => {
     <>
       <MetaTags 
         title="Careers at Wave pilot- Marine Jobs & Opportunities"
-        description="Explore exciting career opportunities in marine robotics, autonomous systems, and subsea technology at Hydrocean."
+        description="Explore exciting career opportunities in marine robotics, autonomous systems, and subsea technology at Wave pilot."
         keywords="marine jobs, robotics careers, autonomous vehicles, USV jobs, AUV jobs, subsea engineering"
       />
       <Header />
@@ -127,6 +114,10 @@ const Jobs = () => {
             />
           )}
 
+          {/* ✅ Power Bank Offer Section - After Jobs */}
+          <PowerBankOffer />
+
+          {/* Application Form */}
           <div id="application-form-section" className="mt-16">
             <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-8">
               <h2 className="text-2xl font-display font-bold text-dark-200 mb-6">

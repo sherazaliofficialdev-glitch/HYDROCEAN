@@ -26,7 +26,7 @@ const BottomNav = () => {
 
   return (
     <>
-      {/* Bottom Navigation */}
+      {/* ✅ Bottom Navigation - Mobile & Tablet */}
       <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-dark-200/95 backdrop-blur-2xl border-t border-slate-800/80 px-4 py-2 flex justify-around items-center h-16">
         {navItems.map((item) => (
           <Link
@@ -58,7 +58,7 @@ const BottomNav = () => {
         </button>
       </div>
 
-      {/* Side Drawer */}
+      {/* ✅ Side Drawer */}
       <AnimatePresence>
         {drawerOpen && (
           <>

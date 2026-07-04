@@ -50,7 +50,7 @@ export const sendEmail = async ({ to, subject, html }) => {
 
   try {
     const info = await transporter.sendMail({
-      from: `"Hydrocean Marine" <${process.env.EMAIL_USER.trim()}>`,
+      from: `"Wave pilot" <${process.env.EMAIL_USER.trim()}>`,
       to,
       subject,
       html,

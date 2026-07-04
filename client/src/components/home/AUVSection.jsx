@@ -70,7 +70,7 @@ const AUVSection = () => {
             className="relative overflow-hidden h-full min-h-[500px] order-2 lg:order-2"
           >
             <img
-              src="/images/image (10).jpeg"
+              src="/images/images.png"
               alt="Autonomous Underwater Vehicle"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />
