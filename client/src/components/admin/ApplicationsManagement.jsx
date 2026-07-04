@@ -16,6 +16,7 @@ const ApplicationsManagement = () => {
   const [selectedApp, setSelectedApp] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [adminNotes, setAdminNotes] = useState('');
+  const [updating, setUpdating] = useState(false);
   const { showSuccess, showError } = useToast();
 
   useEffect(() => {
@@ -36,15 +37,51 @@ const ApplicationsManagement = () => {
     }
   };
 
+  // ✅ Fix: Update status and auto-refresh
   const handleStatusUpdate = async (id, status) => {
+    if (!id) {
+      showError('Application ID is missing.');
+      return;
+    }
+
+    setUpdating(true);
     try {
-      await API.put(`/applications/admin/${id}/status`, { status, adminNotes });
-      showSuccess(`Application ${status.toLowerCase()}.`);
-      setShowModal(false);
-      setSelectedApp(null);
-      fetchApplications();
+      const response = await API.put(`/applications/admin/${id}/status`, { 
+        status, 
+        adminNotes: adminNotes || '' 
+      });
+
+      if (response.data.success) {
+        showSuccess(`Application ${status.toLowerCase()} successfully!`);
+
+        // ✅ Update applications list locally (no refresh needed)
+        setApplications(prevApps => 
+          prevApps.map(app => {
+            if ((app.id === id || app._id === id)) {
+              return { 
+                ...app, 
+                status: status,
+                adminNotes: adminNotes || app.adminNotes,
+              };
+            }
+            return app;
+          })
+        );
+
+        // ✅ Close modal
+        setShowModal(false);
+        setSelectedApp(null);
+        setAdminNotes('');
+
+        // ✅ Optional: Refetch to sync with backend
+        setTimeout(() => {
+          fetchApplications();
+        }, 1000);
+      }
     } catch (error) {
-      showError('Failed to update status.');
+      showError(error.response?.data?.message || 'Failed to update status.');
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -54,16 +91,11 @@ const ApplicationsManagement = () => {
       showError('No file available to view.');
       return;
     }
-    
-    // ✅ Check if it's a PDF
-    if (fileType === 'pdf' || url.includes('.pdf') || url.includes('application/pdf')) {
-      window.open(url, '_blank');
-      return;
-    }
-    
-    // ✅ For images - open in new tab
     window.open(url, '_blank');
   };
+
+  // ✅ Get application ID
+  const getAppId = (app) => app.id || app._id;
 
   if (loading && applications.length === 0) {
     return (
@@ -118,7 +150,7 @@ const ApplicationsManagement = () => {
           </thead>
           <tbody>
             {applications.map((app) => {
-              const appId = app.id || app._id;
+              const appId = getAppId(app);
               
               return (
                 <tr key={appId} className="border-b border-slate-100 hover:bg-slate-50">
@@ -129,7 +161,6 @@ const ApplicationsManagement = () => {
                   <td className="py-3 px-4 text-slate-500">{app.jobTitle}</td>
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2 flex-wrap">
-                      {/* ✅ Photo View Button */}
                       {app.candidatePhoto && (
                         <button
                           onClick={() => openFileInNewTab(app.candidatePhoto, 'image')}
@@ -139,7 +170,6 @@ const ApplicationsManagement = () => {
                           <Image className="h-4 w-4" />
                         </button>
                       )}
-                      {/* ✅ CV View Button */}
                       {app.cvUrl && (
                         <button
                           onClick={() => openFileInNewTab(app.cvUrl, 'pdf')}
@@ -149,7 +179,6 @@ const ApplicationsManagement = () => {
                           <FileText className="h-4 w-4" />
                         </button>
                       )}
-                      {/* ✅ Deposit Slip View Button */}
                       {app.depositSlipUrl && (
                         <button
                           onClick={() => openFileInNewTab(app.depositSlipUrl, 'image')}
@@ -176,7 +205,11 @@ const ApplicationsManagement = () => {
                   <td className="py-3 px-4">
                     <div className="flex items-center justify-end gap-2">
                       <button
-                        onClick={() => { setSelectedApp(app); setAdminNotes(app.adminNotes || ''); setShowModal(true); }}
+                        onClick={() => { 
+                          setSelectedApp(app); 
+                          setAdminNotes(app.adminNotes || ''); 
+                          setShowModal(true); 
+                        }}
                         className="p-1.5 text-primary-500 hover:bg-primary-50 rounded-lg transition"
                         title="Review"
                       >
@@ -200,7 +233,13 @@ const ApplicationsManagement = () => {
       {/* ✅ Modal with Document Preview */}
       <Modal
         isOpen={showModal}
-        onClose={() => { setShowModal(false); setSelectedApp(null); }}
+        onClose={() => { 
+          if (!updating) {
+            setShowModal(false); 
+            setSelectedApp(null);
+            setAdminNotes('');
+          }
+        }}
         title="Review Application"
       >
         {selectedApp && (
@@ -224,11 +263,13 @@ const ApplicationsManagement = () => {
                   selectedApp.status === 'Approved' ? 'text-emerald-600' :
                   selectedApp.status === 'Rejected' ? 'text-rose-600' :
                   'text-amber-600'
-                }`}>{selectedApp.status || 'Pending'}</p>
+                }`}>
+                  {selectedApp.status || 'Pending'}
+                </p>
               </div>
             </div>
 
-            {/* ✅ Documents Section with Preview Buttons */}
+            {/* Documents Section */}
             <div className="border-t border-slate-100 pt-4">
               <p className="text-xs text-slate-500 font-medium mb-3">Attached Documents</p>
               <div className="grid grid-cols-3 gap-3">
@@ -283,32 +324,79 @@ const ApplicationsManagement = () => {
                 rows={3}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition resize-none"
                 placeholder="Add notes about this application..."
+                disabled={updating}
               />
             </div>
 
+            {/* ✅ Action Buttons - Close modal on click */}
             <div className="flex gap-3">
               <button
-                onClick={() => handleStatusUpdate(selectedApp.id || selectedApp._id, 'Approved')}
-                className="flex-1 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition flex items-center justify-center gap-2"
+                onClick={() => {
+                  const appId = getAppId(selectedApp);
+                  handleStatusUpdate(appId, 'Approved');
+                }}
+                disabled={updating}
+                className="flex-1 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                <CheckCircle className="h-4.5 w-4.5" />
-                Approve
+                {updating ? (
+                  <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <CheckCircle className="h-4.5 w-4.5" />
+                    Approve
+                  </>
+                )}
               </button>
               <button
-                onClick={() => handleStatusUpdate(selectedApp.id || selectedApp._id, 'Rejected')}
-                className="flex-1 py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl transition flex items-center justify-center gap-2"
+                onClick={() => {
+                  const appId = getAppId(selectedApp);
+                  handleStatusUpdate(appId, 'Rejected');
+                }}
+                disabled={updating}
+                className="flex-1 py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl transition flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                <XCircle className="h-4.5 w-4.5" />
-                Reject
+                {updating ? (
+                  <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <XCircle className="h-4.5 w-4.5" />
+                    Reject
+                  </>
+                )}
               </button>
               <button
-                onClick={() => handleStatusUpdate(selectedApp.id || selectedApp._id, 'Pending')}
-                className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition flex items-center justify-center gap-2"
+                onClick={() => {
+                  const appId = getAppId(selectedApp);
+                  handleStatusUpdate(appId, 'Pending');
+                }}
+                disabled={updating}
+                className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                <Clock className="h-4.5 w-4.5" />
-                Pending
+                {updating ? (
+                  <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Clock className="h-4.5 w-4.5" />
+                    Pending
+                  </>
+                )}
               </button>
             </div>
+
+            {/* ✅ Close button */}
+            <button
+              onClick={() => {
+                if (!updating) {
+                  setShowModal(false);
+                  setSelectedApp(null);
+                  setAdminNotes('');
+                }
+              }}
+              className="w-full py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-xl transition"
+              disabled={updating}
+            >
+              Close
+            </button>
           </div>
         )}
       </Modal>
