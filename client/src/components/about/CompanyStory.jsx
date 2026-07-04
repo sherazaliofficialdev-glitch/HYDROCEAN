@@ -23,7 +23,7 @@ const CompanyStory = () => {
             className="relative overflow-hidden h-full min-h-[500px] order-1"
           >
             <img
-              src="/images/images (1).jpeg"
+              src="/images/image1.png"
               alt="Wave pilot Story"
               className="w-full h-[750px]  hover:scale-105 transition-transform duration-700"
             />
