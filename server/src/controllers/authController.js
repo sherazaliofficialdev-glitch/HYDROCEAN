@@ -41,8 +41,7 @@ export const register = catchAsync(async (req, res, next) => {
   // ✅ Check if this email is a main admin email
   const isMainAdmin = process.env.MAIN_ADMIN_EMAIL_1 === email || 
                       process.env.MAIN_ADMIN_EMAIL_2 === email;
-console.time("REGISTER");
-console.log("Step 1: Before User.create");
+
   // ✅ Create user directly (verified = true)
   const user = await User.create({
     firstName,
@@ -52,16 +51,14 @@ console.log("Step 1: Before User.create");
     role: isMainAdmin ? 'admin' : 'user',
     isVerified: true,
   });
-console.log("Step 2: User created");
+
   // ✅ Send welcome email (optional - don't wait for it)
-  console.log("Step 3: Before Welcome Email");
-  try {
-    await sendWelcomeEmail(email, `${firstName} ${lastName}`);
-  } catch (error) {
-    console.log('⚠️ Welcome email failed but user registered:', error.message);
-  }
-console.log("Step 4: Welcome Email Sent");
-console.timeEnd("REGISTER");
+  sendWelcomeEmail(email, `${firstName} ${lastName}`)
+  .catch((error) => {
+    console.error("Welcome email failed:", error.message);
+  });
+
+
   // ✅ Generate JWT token
   const token = signToken(user._id);
 
