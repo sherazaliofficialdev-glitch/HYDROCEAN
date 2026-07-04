@@ -1,175 +1,158 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { 
-  Users, Briefcase, FileText, Mail, TrendingUp, 
-  Clock, CheckCircle, XCircle, UserPlus, Calendar
+  LayoutDashboard, Users, Briefcase, ClipboardList, 
+  MessageSquare, LogOut, Menu, X, Settings, ChevronDown
 } from 'lucide-react';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
-import BottomNav from '../common/BottomNav';
-import AdminSidebar from './AdminSidebar';
-import UsersManagement from './UsersManagement';
-import JobsManagement from './JobsManagement';
-import ApplicationsManagement from './ApplicationsManagement';
-import ContactsManagement from './ContactsManagement';
-import GlobalSearch from './GlobalSearch';
-import LoadingSpinner from '../common/LoadingSpinner';
 import { useAuth } from '../../hooks/useAuth';
-import API from '../../utils/api';
-import MetaTags from '../../seo/MetaTags';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+const AdminSidebar = ({ activeTab, setActiveTab }) => {
+  const { logout } = useAuth();
+  const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
-    setLoading(true);
-    try {
-      const response = await API.get('/admin/stats');
-      setStats(response.data.stats);
-    } catch (error) {
-      console.error('Error fetching admin stats:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const tabs = [
-    { id: 'dashboard', label: 'Dashboard', icon: TrendingUp },
+  const menuItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'users', label: 'Users', icon: Users },
     { id: 'jobs', label: 'Jobs', icon: Briefcase },
-    { id: 'applications', label: 'Applications', icon: FileText },
-    { id: 'contacts', label: 'Contacts', icon: Mail },
+    { id: 'applications', label: 'Applications', icon: ClipboardList },
+    { id: 'contacts', label: 'Messages', icon: MessageSquare },
   ];
 
-  if (loading) {
-    return (
-      <>
-        <Header />
-        <LoadingSpinner fullScreen />
-        <BottomNav />
-      </>
-    );
-  }
+  const handleTabClick = (id) => {
+    setActiveTab(id);
+    setMobileOpen(false);
+  };
+
+  // ✅ Desktop Sidebar
+  const DesktopSidebar = () => (
+    <div className="hidden lg:flex h-full flex-col justify-between py-6 w-64 bg-white border-r border-slate-200 sticky top-20 min-h-[calc(100vh-5rem)]">
+      <div>
+        <div className="px-6 mb-8">
+          <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-primary-500">
+            Admin Panel
+          </h2>
+          <p className="text-[10px] text-slate-400">Hydrocean Management</p>
+        </div>
+
+        <nav className="space-y-1">
+          {menuItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`w-full flex items-center gap-3 px-6 py-3 text-sm font-semibold transition ${
+                activeTab === item.id
+                  ? 'bg-primary-50 text-primary-600 border-r-4 border-primary-500'
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'
+              }`}
+            >
+              <item.icon className="h-4.5 w-4.5" />
+              {item.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      <div className="border-t border-slate-200 pt-4">
+        <button
+          onClick={logout}
+          className="w-full flex items-center gap-3 px-6 py-3 text-sm font-semibold text-rose-500 hover:bg-rose-50 transition"
+        >
+          <LogOut className="h-4.5 w-4.5" />
+          Logout
+        </button>
+      </div>
+    </div>
+  );
+
+  // ✅ Mobile - Horizontal Top Navigation
+  const MobileTopNav = () => (
+    <div className="lg:hidden fixed top-16 left-0 right-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+      <div className="flex items-center justify-between px-3 py-2">
+        {/* ✅ Brand */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="p-1.5 hover:bg-slate-100 rounded-lg transition"
+          >
+            {mobileOpen ? <X className="h-5 w-5 text-slate-600" /> : <Menu className="h-5 w-5 text-slate-600" />}
+          </button>
+          <span className="text-xs font-bold text-primary-600 uppercase tracking-wider">Admin</span>
+        </div>
+
+        {/* ✅ Active Tab Label */}
+        <span className="text-sm font-medium text-dark-200 truncate max-w-[120px]">
+          {menuItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
+        </span>
+
+        {/* ✅ Logout */}
+        <button
+          onClick={logout}
+          className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"
+        >
+          <LogOut className="h-4.5 w-4.5" />
+        </button>
+      </div>
+
+      {/* ✅ Mobile Dropdown Menu - Slide Down */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="bg-white border-t border-slate-100 shadow-lg rounded-b-2xl overflow-hidden"
+          >
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 p-2">
+              {menuItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleTabClick(item.id)}
+                  className={`flex flex-col items-center gap-1 p-3 rounded-xl transition ${
+                    activeTab === item.id
+                      ? 'bg-primary-50 text-primary-600 border border-primary-100'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`}
+                >
+                  <item.icon className="h-5 w-5" />
+                  <span className="text-[10px] font-medium">{item.label}</span>
+                  {activeTab === item.id && (
+                    <span className="w-6 h-0.5 rounded-full bg-primary-500" />
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {/* ✅ Logout in dropdown */}
+            <div className="border-t border-slate-100 p-2">
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition text-sm font-medium"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 
   return (
     <>
-      <MetaTags title="Admin Dashboard - Wave pilotMarine" />
-      <Header />
-      <main className="pt-20 pb-24 lg:pb-0 min-h-screen bg-slate-50">
-        <div className="flex flex-col lg:flex-row">
-          {/* ✅ Sidebar - Desktop & Mobile (via hamburger) */}
-          <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-
-          {/* ✅ Main Content - Full width on mobile */}
-          <div className="flex-1 lg:ml-0">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-              {/* Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
-                <div>
-                  <h1 className="text-xl sm:text-2xl font-bold text-dark-200">
-                    Admin Dashboard
-                  </h1>
-                  <p className="text-slate-500 text-xs sm:text-sm">
-                    Welcome back, {user?.firstName}! Here's what's happening.
-                  </p>
-                </div>
-                {/* ✅ GlobalSearch - Hidden on mobile, visible on tablet+ */}
-                <div className="hidden sm:block">
-                  <GlobalSearch />
-                </div>
-              </div>
-
-              {/* ✅ Stats Cards - Responsive grid */}
-              {activeTab === 'dashboard' && stats && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 sm:gap-4 mb-6 sm:mb-8">
-                  <StatCard icon={Users} label="Total Users" value={stats.totalUsers} color="blue" />
-                  <StatCard icon={UserPlus} label="Today's Users" value={stats.usersToday} color="green" />
-                  <StatCard icon={Briefcase} label="Total Jobs" value={stats.totalJobs} color="purple" />
-                  <StatCard icon={FileText} label="Applications" value={stats.totalApplications} color="orange" />
-                  <StatCard icon={Clock} label="Pending" value={stats.pendingApplications} color="amber" />
-                  <StatCard icon={CheckCircle} label="Approved" value={stats.approvedApplications} color="emerald" />
-                  <StatCard icon={XCircle} label="Rejected" value={stats.rejectedApplications} color="rose" />
-                  <StatCard icon={Mail} label="Messages" value={stats.totalContacts} color="indigo" />
-                  <StatCard icon={Calendar} label="Visitors Today" value={stats.visitorsToday} color="teal" />
-                  <StatCard icon={TrendingUp} label="This Week" value={stats.visitorsThisWeek} color="cyan" />
-                </div>
-              )}
-
-              {/* ✅ Tab Content - Full width */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-6 overflow-x-auto">
-                {activeTab === 'dashboard' && (
-                  <div className="space-y-4 sm:space-y-6">
-                    <h2 className="text-base sm:text-lg font-bold text-dark-200">Recent Activity</h2>
-                    {stats?.recentActivities?.length > 0 ? (
-                      <div className="space-y-3">
-                        {stats.recentActivities.map((activity, index) => (
-                          <div key={index} className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl text-sm">
-                            <div className="w-2 h-2 rounded-full bg-primary-500 mt-2 shrink-0" />
-                            <div className="min-w-0">
-                              <p className="font-semibold text-dark-200 text-sm sm:text-base">{activity.action}</p>
-                              <p className="text-xs text-slate-500">{activity.description}</p>
-                              <p className="text-[10px] text-slate-400 mt-1">
-                                {new Date(activity.timestamp).toLocaleString()}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-slate-500">No recent activity.</p>
-                    )}
-                  </div>
-                )}
-
-                {activeTab === 'users' && <UsersManagement />}
-                {activeTab === 'jobs' && <JobsManagement />}
-                {activeTab === 'applications' && <ApplicationsManagement />}
-                {activeTab === 'contacts' && <ContactsManagement />}
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-      <Footer />
-      <BottomNav />
+      <MobileTopNav />
+      <DesktopSidebar />
+      {/* ✅ Mobile Spacer - So content doesn't hide under nav */}
+      <div className="lg:hidden h-14" />
     </>
   );
 };
 
-const StatCard = ({ icon: Icon, label, value, color }) => {
-  const colors = {
-    blue: 'bg-blue-50 text-blue-600 border-blue-100',
-    green: 'bg-green-50 text-green-600 border-green-100',
-    purple: 'bg-purple-50 text-purple-600 border-purple-100',
-    orange: 'bg-orange-50 text-orange-600 border-orange-100',
-    amber: 'bg-amber-50 text-amber-600 border-amber-100',
-    emerald: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-    rose: 'bg-rose-50 text-rose-600 border-rose-100',
-    indigo: 'bg-indigo-50 text-indigo-600 border-indigo-100',
-    teal: 'bg-teal-50 text-teal-600 border-teal-100',
-    cyan: 'bg-cyan-50 text-cyan-600 border-cyan-100',
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`p-3 sm:p-4 rounded-xl border ${colors[color]} shadow-sm`}
-    >
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        <Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
-        <span className="text-[10px] sm:text-xs font-medium text-slate-500 truncate">{label}</span>
-      </div>
-      <p className="text-lg sm:text-2xl font-bold mt-0.5 sm:mt-1">{value || 0}</p>
-    </motion.div>
-  );
-};
-
-export default AdminDashboard;
+export default AdminSidebar;

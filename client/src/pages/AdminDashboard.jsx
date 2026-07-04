@@ -65,9 +65,12 @@ const AdminDashboard = () => {
       <main className="pt-20 pb-24 lg:pb-0 min-h-screen bg-slate-50">
         <div className="flex">
           {/* Sidebar - Desktop */}
-          <div className="hidden lg:block w-64 min-h-screen bg-white border-r border-slate-200 sticky top-20">
-            <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-          </div>
+          <div className="lg:w-64">
+  <AdminSidebar
+    activeTab={activeTab}
+    setActiveTab={setActiveTab}
+  />
+</div>
 
           {/* Main Content */}
           <div className="flex-1">
