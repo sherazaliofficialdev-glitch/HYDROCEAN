@@ -25,8 +25,8 @@ const Home = () => {
       <main>
         <HeroSlider />
         <CompanyIntro />
-        <USVSection />
         <AUVSection />
+        <USVSection />
         <WhyChooseUs />
         <TrustSection />
         <FeaturedJobs />

@@ -70,7 +70,7 @@ const HeroSlider = () => {
       description: "State-of-the-art autonomous surface vessels engineered for marine operations, high-resolution ocean monitoring, tactical surveillance, and real-time remote data collection.",
       button1Text: "Explore USV",
       button2Text: "View Jobs",
-      image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=1920",
+      image: "/images/image (7).jpeg",
       ctaLink: "/about"
     },
     {
@@ -80,7 +80,7 @@ const HeroSlider = () => {
       description: "Advanced subsea robotic systems operating entirely underwater for scientific ocean research, industrial infrastructure inspection, bathymetric mapping, and deep-sea exploration.",
       button1Text: "Explore AUV",
       button2Text: "Our Technology",
-      image: "https://images.unsplash.com/photo-1682687220063-4742bd7fd538?auto=format&fit=crop&q=80&w=1920",
+      image: "/images/image (1).jpeg",
       ctaLink: "/about"
     },
     {
@@ -90,7 +90,7 @@ const HeroSlider = () => {
       description: "Empowering deep ocean research missions using AI-driven navigation filters, acoustic telemetry arrays, high-definition camera suites, and long-endurance power management.",
       button1Text: "Our Technology",
       button2Text: "View Jobs",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1920",
+      image: "/images/image (8).jpeg",
       ctaLink: "/about"
     },
     {
@@ -100,7 +100,7 @@ const HeroSlider = () => {
       description: "Supporting defense security, oceanographic research, offshore pipeline inspection, port security, and deep sea search & rescue operations.",
       button1Text: "View Applications",
       button2Text: "Contact Us",
-      image: "https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=1920",
+      image: "/images/image (9).jpeg",
       ctaLink: "/jobs"
     },
     {
@@ -110,7 +110,7 @@ const HeroSlider = () => {
       description: "Shaping the next century of autonomous maritime science through integrated Artificial Intelligence, robotic fleet synchronization, cognitive navigation, and smart marine solutions.",
       button1Text: "Join Us",
       button2Text: "Learn More",
-      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=1920",
+      image: "/images/image (6).jpeg",
       ctaLink: "/jobs"
     }
   ];
@@ -207,15 +207,14 @@ const HeroSlider = () => {
             transition={{ duration: 0.8, ease: "easeInOut" }}
             className="absolute inset-0"
           >
-            <div 
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-              style={{ 
-                backgroundImage: `url(${heroSlides[activeSlide].image})`,
-              }}
-            />
+            <img
+  src={heroSlides[activeSlide].image}
+  alt="Background"
+  className="absolute inset-0 w-full h-full object-cover"
+/>
             {/* Gradient Overlay - Dark Premium */}
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/0 via-slate-900/0 to-slate-950/10" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/30" />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/20 via-slate-900/30 to-slate-950/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-slate-950/30" />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -259,7 +258,7 @@ const HeroSlider = () => {
                 </h1>
 
                 {/* Description */}
-                <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl font-light">
+                <p className="text-sm sm:text-base text-white leading-relaxed max-w-2xl font-light">
                   {heroSlides[activeSlide].description}
                 </p>
 
