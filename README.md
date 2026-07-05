@@ -1,12 +1,12 @@
-# 🌊 Hydrocean Marine Recruitment Portal
+# 🌊 Wave Pilot Marine Recruitment Portal
 
-A complete recruitment portal for Hydrocean Marine Systems. Professional platform for job applications, applicant tracking, and administrative management.
+A complete recruitment portal for Wave Pilot Marine Systems. Professional platform for job applications, applicant tracking, and administrative management.
 
 ---
 
 ## 📸 Preview
 
-![Hydrocean Portal](https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&q=80&w=1200)
+![Wave Pilot Portal](https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&q=80&w=1200)
 
 ---
 

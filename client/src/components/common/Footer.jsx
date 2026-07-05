@@ -44,7 +44,7 @@ const Footer = () => {
             <div className="space-y-2 text-xs text-slate-400">
               <p className="flex items-start gap-2 text-lg">
                 <MapPin className="h-4 w-4 text-primary-400 shrink-0 mt-0.5" />
-                Wave pilot Corporate HQ, Tech Sector 4, Islamabad, Pakistan
+                Near Chaudhary General Store, Canal View Colony, T Point, Kot Addu, Disctrict Muzaffargarh.
               </p>
               <p className="flex items-center gap-2 text-lg">
                 <Mail className="h-4 w-4 text-primary-400 shrink-0" />
@@ -52,7 +52,7 @@ const Footer = () => {
               </p>
               <p className="flex items-center gap-2 text-lg">
                 <Clock className="h-4 w-4 text-primary-400 shrink-0" />
-                Mon - Fri (09:00 AM - 05:00 PM PST)
+                Mon - Fri (09:00 AM - A05:00 PM PST)
               </p>
             </div>
           </div>

@@ -43,9 +43,9 @@ const Header = () => {
             <div className="p-1.5 rounded-xl bg-dark-100 text-primary-400 border border-slate-800 transition-all shadow-md">
               <Compass className="h-6 w-6 sm:h-7 sm:w-7 transition-transform duration-700 group-hover:rotate-180" />
             </div>
-            <div className="hidden xs:block">
+            <div>
               <span className="font-sans font-extrabold text-sm sm:text-base lg:text-lg tracking-tight text-white group-hover:text-primary-400 transition-colors">
-                HYDROCEAN
+                Wave Pilot
               </span>
               <p className="text-[6px] sm:text-[8px] font-mono tracking-widest text-slate-500 uppercase leading-none mt-0.5">
                 Marine Systems

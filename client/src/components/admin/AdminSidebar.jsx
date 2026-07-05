@@ -34,7 +34,7 @@ const AdminSidebar = ({ activeTab, setActiveTab }) => {
           <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-primary-500">
             Admin Panel
           </h2>
-          <p className="text-[10px] text-slate-400">Hydrocean Management</p>
+          <p className="text-[10px] text-slate-400">Wave Pilot Management</p>
         </div>
 
         <nav className="space-y-1">

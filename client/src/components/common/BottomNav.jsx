@@ -80,7 +80,7 @@ const BottomNav = () => {
               <div className="flex items-center justify-between pb-4 border-b border-slate-800/60">
                 <div className="flex items-center gap-2">
                   <Compass className="h-6 w-6 text-primary-400" />
-                  <span className="font-extrabold text-sm text-white">HYDROCEAN</span>
+                  <span className="font-extrabold text-sm text-white">Wave Pilot</span>
                 </div>
                 <button
                   onClick={() => setDrawerOpen(false)}
