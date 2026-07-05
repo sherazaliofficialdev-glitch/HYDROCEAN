@@ -38,14 +38,14 @@ const Header = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo - Fixed Width */}
           <Link to="/" className="flex items-center space-x-3 group shrink-0">
             <div className="p-1.5 rounded-xl bg-dark-100 text-primary-400 border border-slate-800 transition-all shadow-md">
               <Compass className="h-6 w-6 sm:h-7 sm:w-7 transition-transform duration-700 group-hover:rotate-180" />
             </div>
-            <div>
+            <div className="hidden xs:block">
               <span className="font-sans font-extrabold text-sm sm:text-base lg:text-lg tracking-tight text-white group-hover:text-primary-400 transition-colors">
-                Wave pilot
+                HYDROCEAN
               </span>
               <p className="text-[6px] sm:text-[8px] font-mono tracking-widest text-slate-500 uppercase leading-none mt-0.5">
                 Marine Systems
@@ -109,34 +109,37 @@ const Header = () => {
             )}
           </div>
 
-          {/* ✅ Mobile - Dashboard Button (20px from Logo - ml-5 = 20px) */}
-          <div className="lg:hidden flex items-center gap-1.5 shrink-0 ml-5">
+          {/* ✅ Mobile - Fixed Width Buttons (No Shifting) */}
+          <div className="lg:hidden flex items-center gap-1.5 shrink-0">
             {isAuthenticated ? (
               <>
+                {/* ✅ Dashboard Button - Fixed Width */}
                 <Link
                   to="/dashboard"
-                  className="px-3 py-1.5 bg-primary-500 text-dark-200 rounded-full text-[10px] font-bold uppercase min-w-[75px] text-center whitespace-nowrap"
+                  className="px-2.5 py-1.5 bg-primary-500 text-dark-200 rounded-full text-[10px] font-bold uppercase min-w-[70px] text-center whitespace-nowrap"
                 >
                   Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="p-1.5 text-slate-400 hover:text-rose-400 transition rounded-full"
+                  className="p-1.5 text-slate-400 hover:text-rose-400 transition rounded-full shrink-0"
                 >
                   <LogOut className="h-4 w-4" />
                 </button>
               </>
             ) : (
               <>
+                {/* ✅ Login Button - Fixed Width */}
                 <Link
                   to="/login"
-                  className="px-3 py-1.5 bg-primary-500 text-dark-200 rounded-full text-[10px] font-bold uppercase min-w-[50px] text-center"
+                  className="px-2.5 py-1.5 bg-primary-500 text-dark-200 rounded-full text-[10px] font-bold uppercase min-w-[50px] text-center whitespace-nowrap"
                 >
                   Login
                 </Link>
+                {/* ✅ Register Button - Fixed Width */}
                 <Link
                   to="/register"
-                  className="px-3 py-1.5 bg-slate-700 text-white rounded-full text-[10px] font-bold uppercase min-w-[55px] text-center"
+                  className="px-2.5 py-1.5 bg-slate-700 text-white rounded-full text-[10px] font-bold uppercase min-w-[55px] text-center whitespace-nowrap"
                 >
                   Sign Up
                 </Link>

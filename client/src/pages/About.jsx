@@ -21,7 +21,7 @@ const About = () => {
         keywords="about Wave pilot, marine technology, autonomous vehicles, USV, AUV, subsea robotics"
       />
       <Header />
-      <main>
+      <main className="pt-20 pb-24 lg:pb-0 overflow-x-hidden">
         <CompanyStory />
         <MissionVision />
         <USVDetails />

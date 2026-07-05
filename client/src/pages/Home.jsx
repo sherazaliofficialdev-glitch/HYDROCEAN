@@ -24,7 +24,7 @@ const Home = () => {
         keywords="USV, AUV, marine technology, autonomous vehicles, Wave pilot"
       />
       <Header />
-      <main>
+      <main className="pt-20 pb-24 lg:pb-0 overflow-x-hidden">
         {/* ✅ New Maldives Hero - Top */}
         <MaldivesHero />
         

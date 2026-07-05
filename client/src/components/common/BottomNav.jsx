@@ -26,20 +26,20 @@ const BottomNav = () => {
 
   return (
     <>
-      {/* ✅ Bottom Navigation - Mobile & Tablet */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-dark-200/95 backdrop-blur-2xl border-t border-slate-800/80 px-4 py-2 flex justify-around items-center h-16">
+      {/* ✅ Bottom Navigation - Always Visible (No hide on scroll) */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-dark-200/95 backdrop-blur-2xl border-t border-slate-800/80 px-2 py-2 flex justify-between items-center h-16">
         {navItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
-            className={`flex flex-col items-center justify-center gap-0.5 transition-all ${
+            className={`flex-1 min-w-[50px] max-w-[70px] flex flex-col items-center justify-center gap-0.5 transition-all ${
               isActive(item.path)
                 ? 'text-primary-400 scale-110'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
             <item.icon className="h-5 w-5" />
-            <span className="text-[9px] font-medium">{item.name}</span>
+            <span className="text-[9px] font-medium truncate">{item.name}</span>
             {isActive(item.path) && (
               <motion.span
                 layoutId="bottomNavIndicator"
@@ -51,7 +51,7 @@ const BottomNav = () => {
 
         <button
           onClick={() => setDrawerOpen(true)}
-          className="flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-slate-200 transition"
+          className="flex-1 min-w-[50px] max-w-[70px] flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-slate-200 transition"
         >
           <Menu className="h-5 w-5" />
           <span className="text-[9px] font-medium">Menu</span>
@@ -80,7 +80,7 @@ const BottomNav = () => {
               <div className="flex items-center justify-between pb-4 border-b border-slate-800/60">
                 <div className="flex items-center gap-2">
                   <Compass className="h-6 w-6 text-primary-400" />
-                  <span className="font-extrabold text-sm text-white">Wave pilot</span>
+                  <span className="font-extrabold text-sm text-white">HYDROCEAN</span>
                 </div>
                 <button
                   onClick={() => setDrawerOpen(false)}
